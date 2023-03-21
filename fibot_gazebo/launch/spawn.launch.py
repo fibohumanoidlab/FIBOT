@@ -19,13 +19,17 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
+    package_dir=get_package_share_directory('fibot_gazebo')
+
+    world_file = os.path.join(package_dir,'worlds','soccer_field.world')
+
 
     return LaunchDescription([
     IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
         ),
-        # launch_arguments={'world': world}.items(),
+        launch_arguments={'world': world_file}.items(),
     ),
 
     IncludeLaunchDescription(

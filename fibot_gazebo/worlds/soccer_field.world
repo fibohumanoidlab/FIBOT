@@ -1,5 +1,9 @@
 <sdf version='1.6'>
   <world name='default'>
+    <max_step_size>0.001</max_step_size>
+    <real_time_factor>1.000</real_time_factor>
+    <real_time_update_rate>100.00</real_time_update_rate>
+    <gravity>0 0 -9.81</gravity>
     <include>
       <uri>model://sun</uri>
     </include>
@@ -7,21 +11,14 @@
       <uri>model://ground_plane</uri>
     </include>
     <include>
-      <name>aruco_marker1</name>
+      <name>soccer_field</name>
       <uri>model://soccer_field</uri>
-      <pose frame=''>0 0 0 0 0 0</pose>
+      <pose>0 0 0 0 0 0</pose>
+      <static>true</static>
     </include>
    
 
 
-    <plugin name="ros_link_attacher_plugin" filename="libgazebo_ros_link_attacher.so" />
-
-    <gui fullscreen='0'>
-      <camera name='user_camera'>
-        <pose frame=''>12.804 6.59761 20.6782 0 0.963643 -2.65182</pose>
-        <view_controller>orbit</view_controller>
-        <projection_type>perspective</projection_type>
-      </camera>
-    </gui>
+    
   </world>
 </sdf>
