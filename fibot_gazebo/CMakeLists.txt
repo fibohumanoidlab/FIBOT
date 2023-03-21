@@ -36,7 +36,7 @@ endif()
 #install
 ####################################################################
 install(
-  DIRECTORY src launch worlds
+  DIRECTORY src launch worlds rviz
   DESTINATION share/${PROJECT_NAME}
 )
 
