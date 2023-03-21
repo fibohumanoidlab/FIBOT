@@ -39,9 +39,9 @@ def generate_launch_description():
 
     return LaunchDescription([
 
-    # ExecuteProcess(
-    #         cmd=['ros2', 'param', 'set', '/gazebo', 'use_sim_time', use_sim_time],
-    #         output='screen'),
+    ExecuteProcess(
+            cmd=['ros2', 'param', 'set', '/gazebo', 'use_sim_time', use_sim_time],
+            output='screen'),
 
     IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -75,7 +75,7 @@ def generate_launch_description():
         executable='spawn_entity.py',
         name='urdf_spawner',
         output='screen',
-        arguments=["-topic", "/robot_description", "-entity", "FIBOT"]
+        arguments=["-topic", "/robot_description", "-entity", "FIBOT","-x=-1.0", "-y=-3.5", "-Y=-1.57"]
         ), 
 
     Node(
