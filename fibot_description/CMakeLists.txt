@@ -36,7 +36,7 @@ endif()
 #install
 ####################################################################
 install(
-  DIRECTORY src urdf
+  DIRECTORY urdf
   DESTINATION share/${PROJECT_NAME}
 )
 
