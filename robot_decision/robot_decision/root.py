@@ -5,10 +5,12 @@ import py_trees
 import py_trees_ros.trees
 import py_trees.console as console
 from py_trees_ros import subscribers
-from back_process import to_blackboard
+# from back_process import to_blackboard
 import rclpy
 import sys
-import behavior
+from . import behavior
+from . import to_blackboard
+
 
 
 def create_root():
@@ -48,7 +50,7 @@ def main(): # run root
         unicode_tree_debug=True
     )
     try:
-        tree.setup(node_name="ball", timeout=15.0)
+        tree.setup(node_name="root_node", timeout=15.0)
     except py_trees_ros.exceptions.TimedOutError as e:
         console.logerror(console.red + "failed to setup the tree, aborting [{}]".format(str(e)) + console.reset)
         tree.shutdown()
@@ -71,4 +73,5 @@ def main(): # run root
         tree.shutdown()
         rclpy.try_shutdown()
 
-main()
+# if __name__ == '__main__':
+#     main()

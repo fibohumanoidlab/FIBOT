@@ -2,8 +2,9 @@ import py_trees
 import py_trees_ros
 import rcl_interfaces.msg as rcl_msgs
 import rcl_interfaces.srv as rcl_srvs
-from py_trees_ros_interfaces.msg import Ball
+# from py_trees_ros_interfaces.msg import Ball
 import std_msgs.msg as std_msgs
+from humanoid_interfaces.msg import Ball
 
 
 class find_ball_behavior(py_trees.behaviour.Behaviour):

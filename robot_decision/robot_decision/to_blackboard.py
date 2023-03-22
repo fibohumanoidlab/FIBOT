@@ -5,7 +5,8 @@ import rclpy.qos
 from std_msgs.msg import Bool
 
 from py_trees_ros import subscribers
-from py_trees_ros_interfaces.msg import Ball
+# from py_trees_ros_interfaces.msg import Ball
+from humanoid_interfaces.msg import Ball
 
 class BallToBlackBoard(subscribers.ToBlackboard):
 
