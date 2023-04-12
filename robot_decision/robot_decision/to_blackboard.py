@@ -25,6 +25,7 @@ class BallToBlackBoard(subscribers.ToBlackboard):
         self.blackboard.msg_ball = Ball()
         self.blackboard.msg_ball.is_detected = False
 
+
     def update(self):
         
         status = super(BallToBlackBoard, self).update()
@@ -33,4 +34,5 @@ class BallToBlackBoard(subscribers.ToBlackboard):
             
             # self.blackboard.is_ball_detected = False
             self.blackboard.is_ball_detected = self.blackboard.msg_ball.is_detected 
+
         return status

@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
-import py_trees_ros
+# from std_msgs.msg import String
+# import py_trees_ros
 # from py_trees_ros_interfaces.msg import Ball
 from humanoid_interfaces.msg import Ball
 
@@ -9,7 +9,7 @@ class Ball_class(Node):
 
     def __init__(self):
         super().__init__('ball_class')
-        self.node = rclpy.create_node(node_name="ball",)
+        self.node = rclpy.create_node(node_name="ball")
         self.publisher_ = self.create_publisher(Ball, 'ball/detection', 10)
         # self.publishers = py_trees_ros.utilities.Publishers(
         #     self.node,
@@ -26,14 +26,14 @@ class Ball_class(Node):
 
     def timer_callback(self):
         print('call back')
-        if self.i >= 10 : 
+        if self.i >= 10 and self.i <= 20: 
             self.ball.is_detected = True
             print(self.ball)
         else :
             self.ball.is_detected = False
             print(self.ball)
-            self.i += 1
-
+        self.i += 1
+        self.node.get_logger().debug('call back %d' %(self.i))
         self.publisher_.publish(self.ball)
 
 

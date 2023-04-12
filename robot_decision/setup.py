@@ -24,7 +24,8 @@ setup(
     entry_points={
         'console_scripts': [
     'root = robot_decision.root:main',
-    'ball = robot_decision.ball_node:main'
+    'ball = robot_decision.ball_node:main',
+    'robot_id = robot_decision.robot_id_node:main'
         ],
     },
 )

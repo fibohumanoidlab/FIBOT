@@ -4,8 +4,7 @@
 import py_trees
 import py_trees_ros.trees
 import py_trees.console as console
-from py_trees_ros import subscribers
-# from back_process import to_blackboard
+# from py_trees_ros import subscribers
 import rclpy
 import sys
 from . import behavior
@@ -17,7 +16,7 @@ def create_root():
 
     main_root = py_trees.composites.Parallel(
         name = "Main_Root", 
-        policy=py_trees.common.ParallelPolicy.SuccessOnAll(synchronise=False)
+        policy=py_trees.common.ParallelPolicy.SuccessOnAll(synchronise=True)
     )
 
     topics2bb = py_trees.composites.Sequence(name="Topics2BB",memory=True)
@@ -30,13 +29,15 @@ def create_root():
     is_ball_detected = py_trees.composites.Sequence(name="Is_Ball_Detected", 
                                                     memory=True)
     finding_ball = behavior.find_ball_behavior(name="Finding_Ball")
+    is_nearest = behavior.nearest(name='Nearest_Robot')
 
     # add root 
     main_root.add_children([topics2bb, task_ball])
     topics2bb.add_child(ball2bb)
     task_ball.add_child(is_ball_detected)
     is_ball_detected.add_child(finding_ball)
-
+    is_ball_detected.add_child(is_nearest)
+    
 
     return main_root
 

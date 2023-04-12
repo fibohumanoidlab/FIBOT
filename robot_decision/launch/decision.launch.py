@@ -12,4 +12,8 @@ def generate_launch_description():
         package= 'robot_decision',
         executable= 'ball',
         ),
+        Node(
+        package= 'robot_decision',
+        executable='robot_id'
+        )
     ])
