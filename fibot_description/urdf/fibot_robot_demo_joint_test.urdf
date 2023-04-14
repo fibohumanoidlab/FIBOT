@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
   <robot name="rehri">
-    <link name="base_footprint"/>
+  <link name="base_footprint"/>
 
   <link name="base">
     <visual>
@@ -11,7 +11,7 @@
         <color rgba=".2 .2 .2 1" />
       </material>
     </visual>
-  <inertial>
+    <inertial>
             <mass value="1" />
             <inertia ixx="0.01" ixy="0.0" ixz="0" 
             iyy="0.01" iyz="0" izz="0.01" />
@@ -27,7 +27,7 @@
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base"/>
-    <origin rpy="0 0 0" xyz="0 0 0.135"/>
+    <origin rpy="0 0 0" xyz="0 0 0.15"/>
   </joint>
 
   <link name="wheel_right_link">
@@ -108,7 +108,7 @@
     <visual>
     
       <geometry>
-        <sphere radius="0.08" />
+        <sphere radius="0.075" />
       </geometry>
       <material name="white" />
     </visual>
@@ -116,13 +116,13 @@
     <collision>
       <origin/>
       <geometry>
-        <sphere radius=".08" />
+        <sphere radius="0.075" />
       </geometry>
     </collision>
   </link>
 
   <joint name="caster_joint" type="continuous">
-    <origin xyz="0.3 0.0 -0.07" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.3 0.0 -0.075" rpy="0.0 0.0 0.0"/>
     <axis xyz="0 0 1" />
     <parent link="base"/>
     <child link="caster"/>
@@ -202,7 +202,8 @@
 
   </joint> -->
   <joint name="camera_joint" type="revolute">
-    <axis xyz="0.0 1.0 0.0"/>
+    <!-- y-axis -->
+    <axis xyz="0.0 1.0 0.0"/> 
     <limit effort="100.0" lower="-1.57" upper="1.57" velocity="0.5"/>
     <origin xyz="0.0 0 0.0" rpy="3.14 2.61799 3.14"/>
     <parent link="yaw_camera"/>
