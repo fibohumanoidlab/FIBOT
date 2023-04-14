@@ -36,8 +36,17 @@ endif()
 #install
 ####################################################################
 install(
-  DIRECTORY launch worlds rviz
+  DIRECTORY launch worlds rviz config
   DESTINATION share/${PROJECT_NAME}
+)
+
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+# Install Python executables
+install(PROGRAMS
+  scripts/publisher_trajectory.py
+
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()

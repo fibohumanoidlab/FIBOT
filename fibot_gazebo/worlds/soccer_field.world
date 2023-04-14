@@ -10,11 +10,20 @@
     <include>
       <uri>model://ground_plane</uri>
     </include>
+    
     <include>
       <name>soccer_field</name>
       <uri>model://soccer_field</uri>
+      <pose>0 0 0.0005 0 0 0</pose>
+      <static>true</static>
+    </include>
+    
+    <include>
+      <name>black_field</name>
+      <uri>model://black_field</uri>
       <pose>0 0 0.0003 0 0 0</pose>
       <static>true</static>
     </include>
+    
   </world>
 </sdf>

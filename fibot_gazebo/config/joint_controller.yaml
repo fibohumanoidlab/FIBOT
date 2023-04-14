@@ -1,0 +1,67 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000
+    use_sim_time: true
+    
+    joint_broad:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    forward_command_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    joint_state_controller:
+      type: joint_state_controller/JointStateController
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+forward_command_controller:
+  ros__parameters:
+
+    publish_rate: 1000.0 # You can set this higher than the controller manager update rate, but it will be throttled
+
+    joints: ['yaw_camera_joint']
+
+    interface_name: position
+
+# joint_trajectory_controller:
+#   ros__parameters:
+
+#       publish_rate: 1000.0
+
+
+joint_trajectory_controller:
+  ros__parameters:
+    publish_rate: 100.0
+    joints:
+      - yaw_camera_joint
+      - camera_joint
+      
+
+    command_interfaces:
+      - position
+      # - velocity
+
+    state_interfaces:
+      - position
+      # - velocity
+    
+   
+    # gains:
+    #   yaw_camera_joint:
+    #     - p: 100
+    #     - i: 200
+    #     - d: 300
+      
+    state_publish_rate: 50.0
+    action_monitor_rate: 20.0
+
+    allow_partial_joints_goal: false
+    open_loop_control: true
+    constraints:
+      stopped_velocity_tolerance: 0.01
+      goal_time: 0.0
+      yaw_camera_joint:
+        trajectory: 0.05
+        goal: 0.0
