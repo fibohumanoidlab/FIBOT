@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import math
+import time
 from nav_msgs.msg import Odometry
 
 import rclpy
@@ -18,6 +19,8 @@ from sensor_msgs.msg import LaserScan
 
 from collections import defaultdict
 
+from rclpy.executors import MultiThreadedExecutor
+
 
 # ===================================== #
 # camera calibration matrix K
@@ -35,6 +38,10 @@ roll =   0.0 #right hand
 XCam = 0.0
 YCam = 0.0
 ZCam = 0.635
+
+pi = []
+
+
 
 class FrameListener(Node):
     def __init__(self):
@@ -55,6 +62,9 @@ class FrameListener(Node):
 
         # Call on_timer function every second
         self.timer = self.create_timer(0.1, self.on_timer)
+
+        self.camera_pose = []
+
     def euler_from_quaternion(self,x, y, z, w):
         """
         Convert a quaternion into euler angles (roll, pitch, yaw)
@@ -84,6 +94,9 @@ class FrameListener(Node):
         from_frame_rel = 'camera'
         to_frame_rel = 'base_footprint'
 
+        # from_frame_rel = 'base_footprint'
+        # to_frame_rel = 'camera'
+
         try:
             t = self.tf_buffer.lookup_transform(
                 to_frame_rel,
@@ -109,13 +122,16 @@ class FrameListener(Node):
         # print(a)
 
         # print(self.euler_from_quaternion(1.0,1.0,1.0,1.0))
-        camera_pose = self.euler_from_quaternion(
+        self.camera_pose = self.euler_from_quaternion(
             t.transform.rotation.x,
             t.transform.rotation.y,
             t.transform.rotation.z,
             t.transform.rotation.w)
-        camera_pose.append(t.transform.translation.z)   
-        print(camera_pose)
+        self.camera_pose.append(t.transform.translation.z)   
+        # print(self.camera_pose)
+        # print(self.camera_pose)
+        pi[:] = self.camera_pose
+      
 
         # print(self.euler_from_quaternion(
         #     t.transform.rotation.x,
@@ -123,14 +139,11 @@ class FrameListener(Node):
         #     t.transform.rotation.z,
         #     t.transform.rotation.w))
         
-        return self.euler_from_quaternion(
-            t.transform.rotation.x,
-            t.transform.rotation.y,
-            t.transform.rotation.z,
-            t.transform.rotation.w)
+        # return camera_pose
 
 
         # self.publisher.publish(msg)
+   
 
 
 class Camera():
@@ -165,16 +178,35 @@ class Camera():
         return self.P
 
     def __init__(self):
+        self.test=0
+        self.frameListener = FrameListener()
+        # self.project = None
+        # self.timer = self.create_timer(0.01, self.main)
+        # self.setK(fx, fy, px, py)
+        # self.setR(np.deg2rad(yaw), np.deg2rad(pitch), np.deg2rad(roll))
+        # self.setT(XCam, YCam, ZCam)
+        # self.project = self.updateP()
+    
+    def main(self):
+        # self.test=0
+        self.test = self.test+2
         self.setK(fx, fy, px, py)
-        self.setR(np.deg2rad(yaw), np.deg2rad(pitch), np.deg2rad(roll))
+        # self.setR(np.deg2rad(yaw), np.deg2rad(pitch), np.deg2rad(roll))
+        self.setR(np.deg2rad(yaw), np.deg2rad(round(pi[1],3)), np.deg2rad(roll))
         self.setT(XCam, YCam, ZCam)
         self.project = self.updateP()
+        # print(pi)
+        # p = [0,1]
+        # print(p)
+        
 
 
 class Topview(object):
     def __init__(self):
         # initialize camera objects
-        cams = Camera()
+        
+        # update R P Y
+        # cams.setR(np.deg2rad(yaw), np.deg2rad(pitch), np.deg2rad(roll))
         # calculate output shape
         pxPerM = (50,50) # 20 px/1 m => 1 px/0.05 m
         self.outputRes = (int(9*pxPerM[0]),int(9*pxPerM[1])) # output 5 m each direction (200 * 200 px)
@@ -183,10 +215,21 @@ class Topview(object):
         # shift = (480,640)
         # M = np.array([[1.0 / pxPerM[1], 0.0, -shift[1] / pxPerM[1]], [0.0, -1.0 / pxPerM[0], shift[0] / pxPerM[0]], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
         # M = np.array([[1.0 / pxPerM[1], 0.0, -shift[1] / pxPerM[1]], [0.0, -1.0 / pxPerM[0], shift[0] / pxPerM[0]], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
-        M = np.array([[1.0 / pxPerM[1], 0.0, 0], [0.0, -1.0 / pxPerM[0], shift[0] / pxPerM[0]], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
+        self.M = np.array([[1.0 / pxPerM[1], 0.0, 0], [0.0, -1.0 / pxPerM[0], shift[0] / pxPerM[0]], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
         # find IPM as inverse of P*M
         # self.IPMs = {}
-        self.IPMs = np.linalg.inv((cams.project).dot(M))
+        # self.IPMs = np.linalg.inv((cams.project).dot(M))
+
+        self.IPMs = None  
+
+        self.cams = Camera()
+
+    def main(self):
+        
+        self.cams.main()
+        # cams =Camera().main()
+        # cams = Camera()
+        self.IPMs = np.linalg.inv((self.cams.project).dot(self.M))
     
 class ImageSubscriber(Node):
   """
@@ -205,10 +248,13 @@ class ImageSubscriber(Node):
       Image, 
       '/camera1/image_raw', 
       self.listener_callback, 
-      10)
+      3)
     self.subscription # prevent unused variable warning
 
-    self.publisher_ = self.create_publisher(Image, 'line', 10)
+    self.publisher_ = self.create_publisher(Image, 'line', 2)
+
+    self.mynode = Topview()
+    self.seconds = time.time()
    
 
 
@@ -229,15 +275,18 @@ class ImageSubscriber(Node):
    
 
     # Display the message on the console
-    self.get_logger().info('Receiving video frame')
+    # self.get_logger().info('Receiving video frame')
+    
  
     # Convert ROS Image message to OpenCV image
     current_frame = self.br.imgmsg_to_cv2(data)
 
     # print(current_frame[0][0])
 
-    mynode = Topview()
-    result = cv2.warpPerspective(current_frame, mynode.IPMs, (mynode.outputRes[1]+200, mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
+    
+    self.mynode.main()
+    
+    result = cv2.warpPerspective(current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
 
     # cv2.imshow("camera", result)
     
@@ -246,7 +295,7 @@ class ImageSubscriber(Node):
 
 
    
-#crate lidar line
+    #crate lidar line
     length = 600
     angles = []
     for i in range(-90,90,1):
@@ -258,26 +307,48 @@ class ImageSubscriber(Node):
         radians = angle * np.pi / 180
         x2 = int(length * np.cos(radians))
         y2 = int(length * np.sin(radians))
-        resault2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
+        result2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
     # result2 = cv2.line(result2, (0,700), (800,0), (0,0,0), 1)
 
     result = abs(result-result2)
+    self.publisher_.publish(self.br.cv2_to_imgmsg(result, encoding='rgb8'))
 
-    cv2.imshow("camera", result)
+    print(time.time() - self.seconds)
+    self.seconds = time.time()
+
+    # cv2.imshow("camera", result)
     
-    cv2.waitKey(1)
+    # cv2.waitKey(1)
 
 
 def main():
     rclpy.init()
-    node = FrameListener()
-    # node = ImageSubscriber()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
+    node1 = FrameListener()
+    node2 = ImageSubscriber()
 
+    executor = MultiThreadedExecutor()
+
+    # Add nodes to the executor
+    executor.add_node(node1)
+    executor.add_node(node2)
+
+    # Spin the nodes concurrently using the executor
+    executor.spin()
+
+    # Cleanup
+    executor.shutdown()
     rclpy.shutdown()
+
+    # rclpy.init()
+    # node = FrameListener()
+    # node2 = ImageSubscriber()
+    # try:
+    #     rclpy.spin(node)
+    #     rclpy.spin(node2)
+    # except KeyboardInterrupt:
+    #     pass
+
+    # rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

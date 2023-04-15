@@ -102,12 +102,12 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}],
         ),
 
-    Node(
-        package='localization_pkg',
-        executable='ball_localization.py',
-        name='ball_localization',
-        parameters=[{'use_sim_time': True}],
-        ),
+    # Node(
+    #     package='localization_pkg',
+    #     executable='ball_localization.py',
+    #     name='ball_localization',
+    #     parameters=[{'use_sim_time': True}],
+    #     ),
         
     
     # Node(

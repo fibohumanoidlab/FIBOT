@@ -7,9 +7,10 @@ class TrajectoryPublisher(Node):
     def __init__(self):
         super().__init__('trajectory_publisher')
         self.publisher_ = self.create_publisher(JointTrajectory, '/joint_trajectory_controller/joint_trajectory', 10)
-        self.timer_ = self.create_timer(3, self.publish_trajectory)
+        self.timer_ = self.create_timer(10, self.publish_trajectory)
         self.joint_names_ = ['yaw_camera_joint','camera_joint']
-        self.position = 0.1
+        self.position = 0.75
+        self.invert = 1
         # self.finalposition = 1.57
   
     def publish_trajectory(self):
@@ -20,13 +21,17 @@ class TrajectoryPublisher(Node):
         # points=[]
         point = JointTrajectoryPoint()
 
-        self.position = self.position * -1.0
+        point.positions = [0.0, self.position]
+        
+        self.invert = -1 * self.invert
+
+        self.position = self.position  + (self.invert *0.75/3)
 
         # print(self.position)
 
-        point.positions = [0.0, self.position]
+        
         point.velocities = [0.0, 0.0]
-        point.time_from_start = rclpy.duration.Duration(seconds=3).to_msg()
+        point.time_from_start = rclpy.duration.Duration(seconds=10).to_msg()
 
         msg.points = [point]
         self.publisher_.publish(msg)
