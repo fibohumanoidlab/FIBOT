@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<robot name="macroed" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- <xacro:property name="leglen" value="0.6" />
+  <xacro:property name="polelen" value="0.2" />
+  <xacro:property name="bodylen" value="0.6" />
+  <xacro:property name="baselen" value="0.4" />
+  <xacro:property name="wheeldiam" value="0.07" />
+  <xacro:property name="pi" value="3.1415" /> -->
+
+<!-- ###########################################################set up property #################################################################-->
+  <xacro:property name="base_width" value="0.156" />
+  <xacro:property name="base_length" value="0.118"/>
+  <xacro:property name="base_height" value="0.0464"/>
+  <xacro:property name="base_height_pos" value="1"/>
+
+  <xacro:property name="right_hip_width" value="0.026"/>
+  <xacro:property name="right_hip_length" value="0.048"/>
+  <xacro:property name="right_hip_height" value="0.002"/>
+
+  <xacro:property name="foot_width" value="0.09"/>
+  <xacro:property name="foot_length" value="0.165"/>
+  <xacro:property name="foot_height" value="0.027"/>
+
+  <xacro:property name="upper_foot_width" value="0.026"/>
+  <xacro:property name="upper_foot_length" value="0.054"/>
+  <xacro:property name="upper_foot_height" value="0.029"/>
+
+  <xacro:property name="right_bum_width" value="0.048"/>
+  <xacro:property name="right_bum_length" value="0.0922"/>
+  <xacro:property name="right_bum_height" value="0.06"/>
+
+  <xacro:property name="pi" value="3.1415"/>
+<!-- ###########################################################set up property #################################################################-->
+
+<!-- ###########################################################set up material #################################################################-->
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+<!-- ###########################################################set up material #################################################################-->
+
+  <xacro:macro name="base_inertial" params="mass">
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+  </xacro:macro>
+
+  <link name="base_link">
+    <visual>
+      <!-- <origin xyz="0 0 ${base_height_pos}"/> -->
+      <geometry>
+        <box size="${base_width} ${base_length} ${base_height}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <!-- <origin xyz="0 0 ${base_height_pos}"/> -->
+      <geometry>
+        <box size="${base_width} ${base_length} ${base_height}"/>
+      </geometry>
+    </collision>
+    <xacro:base_inertial mass="0.291"/>
+  </link>
+
+  <link name="right_hip_link">
+    <visual>
+      <origin xyz="0 0 0"/>
+
+      <!-- <origin xyz="0.0305 0  ${-(base_height+right_hip_height)/2}"/> -->
+      <geometry>
+        <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <!-- <origin xyz="0.0305 0  ${-(base_height+right_hip_height)/2}"/> -->
+      <geometry>
+        <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_link_to_rigth_hip_link" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_hip_link"/>
+    <!-- <origin xyz="0 0.0305 ${base_height/2}"/> -->
+    <origin xyz="0.0305 0 ${-(base_height+right_hip_height)/2}"/>
+  </joint>
+
+  <link name="right_bum_link">
+    <visual>
+      <origin xyz="0 -0.0221 0"/>
+      <geometry>
+        <box size="${right_bum_width} ${right_bum_length} ${right_bum_height}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${right_bum_width} ${right_bum_length} ${right_bum_height}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="right_hip_to_right_bum" type="fixed">
+    <parent link="right_hip_link"/>
+    <child link="right_bum_link"/>
+    <origin xyz="0 0 ${-right_bum_height/2}"/>
+  </joint>
+  
+
+
+
+  <!-- <link name="right_foot">
+    <visual>
+      <origin xyz="0 0.5 ${foot_height/2}" />   
+      <geometry>
+        <box size="${foot_width} ${foot_length} ${foot_height}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <link name="upper_right_foot">
+    <visual>
+      <origin xyz="0 0 ${foot_height/2}" />   
+      <geometry>
+        <box size="${upper_foot_width} ${upper_foot_length} ${upper_foot_height}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+  <joint name="right_foot_to_upper_right_foot" type="fixed">
+    <parent link="upper_right_foot"/>
+    <child link="right_foot"/>
+    <origin xyz="0 0 ${foot_height/2}"/>
+  </joint>
+
+  <link name="left_foot">
+    <visual>
+
+      <origin xyz="0 -0.5 ${foot_height/2}"/>   
+      <geometry>
+        <box size="${foot_width} ${foot_length} ${foot_height}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link> -->
+
+
+</robot>
+
