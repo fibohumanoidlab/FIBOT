@@ -101,13 +101,20 @@ def generate_launch_description():
         name='publisher_trajectory',
         parameters=[{'use_sim_time': True}],
         ),
-
+    
     # Node(
-    #     package='localization_pkg',
-    #     executable='ball_localization.py',
-    #     name='ball_localization',
+    #     package='fibot_gazebo',
+    #     executable='publisher_quintic_traj.py',
+    #     name='publisher_quintic_traj',
     #     parameters=[{'use_sim_time': True}],
     #     ),
+
+    Node(
+        package='localization_pkg',
+        executable='ball_localization.py',
+        name='ball_localization',
+        parameters=[{'use_sim_time': True}],
+        ),
         
     
     # Node(

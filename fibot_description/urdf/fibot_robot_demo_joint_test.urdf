@@ -145,11 +145,11 @@
       </material>
     </visual>
 
-    <collision>
+    <!-- <collision>
       <geometry>
           <box size="0.1 0.1 0.05"/>
       </geometry>
-    </collision>
+    </collision> -->
 
   </link>
 
@@ -194,12 +194,12 @@
       </material>
     </visual>
 
-    <collision>
+    <!-- <collision>
     <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
           <box size="0.1 0.1 0.05"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
 
   <!-- ##################### -->
@@ -222,12 +222,12 @@
       </material>
     </visual>
 
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
           <box size="0.1 0.1 0.05"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
 
   <!-- <joint name="camera_joint" type="fixed">
@@ -241,7 +241,7 @@
     <!-- y-axis -->
     <axis xyz="0.0 1.0 0.0"/> 
     <limit effort="100.0" lower="-1.57" upper="1.57" velocity="0.5"/>
-    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.0 0.0 0.13" rpy="0.0 0.0 0.0"/>
     <!-- <origin xyz="0.0 0.0 0.0" rpy="3.14 2.61799 3.14"/> -->
     <parent link="camera_link_fixed"/>
     <child link="camera"/>
@@ -299,8 +299,8 @@
     </joint>
     <joint name="camera_joint">
         <command_interface name="position">
-            <param name="min">0.43</param>
-            <param name="max">1.0</param>
+            <param name="min">0.00</param>
+            <param name="max">3.0</param>
         </command_interface>
         <state_interface name="position">
           <param name="initial_value">1.0</param>
@@ -394,7 +394,7 @@
         </image>
         <clip>
           <near>0.02</near>
-          <far>300</far>
+          <far>20</far>
         </clip>
       </camera>
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">

@@ -21,6 +21,8 @@ from collections import defaultdict
 
 from rclpy.executors import MultiThreadedExecutor
 
+from std_msgs.msg import Float32
+
 
 # ===================================== #
 # camera calibration matrix K
@@ -31,15 +33,17 @@ py = 540.5
 
 # rotation matrix R (in deg)
 yaw =    0.0
-pitch =  30.0
+# pitch =  30.0
+pi = []
 roll =   0.0 #right hand
 
 # vehicle coords of camera origin
 XCam = 0.0
 YCam = 0.0
-ZCam = 0.635
+ZCam = 0.78
 
-pi = []
+
+
 
 
 
@@ -60,8 +64,10 @@ class FrameListener(Node):
         # Create turtle2 velocity publisher
         self.publisher = self.create_publisher(Odometry, 'champ', 10)
 
+        self.publisher = self.create_publisher(Float32, 'camera_pose', 1)
+
         # Call on_timer function every second
-        self.timer = self.create_timer(0.1, self.on_timer)
+        self.timer = self.create_timer(0.01, self.on_timer)
 
         self.camera_pose = []
 
@@ -85,7 +91,7 @@ class FrameListener(Node):
         t4 = +1.0 - 2.0 * (y * y + z * z)
         yaw_z = math.atan2(t3, t4)
      
-        return [math.degrees(roll_x), math.degrees(pitch_y), math.degrees(yaw_z)]  # in degree
+        return [round(math.degrees(roll_x),3), round(pitch_y,5), round(math.degrees(yaw_z),3)]  # in degree
 
     def on_timer(self):
     
@@ -107,15 +113,15 @@ class FrameListener(Node):
                 f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
             return
        
-        msg = Odometry()
-        msg.pose.pose.position.x = t.transform.translation.x  
-        msg.pose.pose.position.y = t.transform.translation.y 
-        msg.pose.pose.position.z = t.transform.translation.z 
+        # msg = Odometry()
+        # msg.pose.pose.position.x = t.transform.translation.x  
+        # msg.pose.pose.position.y = t.transform.translation.y 
+        # msg.pose.pose.position.z = t.transform.translation.z 
 
-        msg.pose.pose.orientation.w = t.transform.rotation.w
-        msg.pose.pose.orientation.x = t.transform.rotation.x
-        msg.pose.pose.orientation.y = t.transform.rotation.y
-        msg.pose.pose.orientation.z = t.transform.rotation.z
+        # msg.pose.pose.orientation.w = t.transform.rotation.w
+        # msg.pose.pose.orientation.x = t.transform.rotation.x
+        # msg.pose.pose.orientation.y = t.transform.rotation.y
+        # msg.pose.pose.orientation.z = t.transform.rotation.z
 
         # print(t.transform.rotation.z)
         # a = self.euler_from_quaternion(1.0,1.0,1.0,1.0)
@@ -131,6 +137,9 @@ class FrameListener(Node):
         # print(self.camera_pose)
         # print(self.camera_pose)
         pi[:] = self.camera_pose
+        msg_str = Float32()
+        msg_str.data = round(pi[1],5)
+        self.publisher.publish(msg_str)
       
 
         # print(self.euler_from_quaternion(
@@ -179,7 +188,8 @@ class Camera():
 
     def __init__(self):
         self.test=0
-        self.frameListener = FrameListener()
+        # self.frameListener = FrameListener()
+        
         # self.project = None
         # self.timer = self.create_timer(0.01, self.main)
         # self.setK(fx, fy, px, py)
@@ -192,12 +202,17 @@ class Camera():
         self.test = self.test+2
         self.setK(fx, fy, px, py)
         # self.setR(np.deg2rad(yaw), np.deg2rad(pitch), np.deg2rad(roll))
-        self.setR(np.deg2rad(yaw), np.deg2rad(round(pi[1],3)), np.deg2rad(roll))
-        self.setT(XCam, YCam, ZCam)
+        self.setR(np.deg2rad(yaw), pi[1], np.deg2rad(roll))
+        # self.setR(np.deg2rad(yaw), 0.65, np.deg2rad(roll))
+        # self.setT(XCam, YCam, ZCam)
+        self.setT(XCam, YCam, pi[3])
         self.project = self.updateP()
         # print(pi)
         # p = [0,1]
         # print(p)
+        
+        # print(pi[:])
+        # print("")
         
 
 
@@ -232,123 +247,276 @@ class Topview(object):
         self.IPMs = np.linalg.inv((self.cams.project).dot(self.M))
     
 class ImageSubscriber(Node):
-  """
-  Create an ImageSubscriber class, which is a subclass of the Node class.
-  """
-  def __init__(self):
     """
-    Class constructor to set up the node
+    Create an ImageSubscriber class, which is a subclass of the Node class.
     """
-    # Initiate the Node class's constructor and give it a name
-    super().__init__('image_subscriber')
-      
-    # Create the subscriber. This subscriber will receive an Image
-    # from the video_frames topic. The queue size is 10 messages.
-    self.subscription = self.create_subscription(
-      Image, 
-      '/camera1/image_raw', 
-      self.listener_callback, 
-      3)
-    self.subscription # prevent unused variable warning
+    def __init__(self):
+        """
+        Class constructor to set up the node
+        """
+        # Initiate the Node class's constructor and give it a name
+        super().__init__('image_subscriber')
+        
+        # Create the subscriber. This subscriber will receive an Image
+        # from the video_frames topic. The queue size is 10 messages.
+        self.subscription = self.create_subscription(
+        Image, 
+        '/camera1/image_raw', 
+        self.listener_callback, 
+        1)
+        self.subscription # prevent unused variable warning
 
-    self.publisher_ = self.create_publisher(Image, 'line', 2)
+        self.timer_ = self.create_timer(0.015, self.timer)
 
-    self.mynode = Topview()
-    self.seconds = time.time()
-   
+        self.publisher_ = self.create_publisher(Image, 'line', 1)
 
-
-
-      
-    # Used to convert between ROS and OpenCV images
-    self.br = CvBridge()
-
-
-   
-    self.publisher_scan = self.create_publisher(LaserScan, '/scan', 10)
-   
-  def listener_callback(self, data):
-    """
-    Callback function.
-    """
-
-   
-
-    # Display the message on the console
-    # self.get_logger().info('Receiving video frame')
+        self.mynode = Topview()
+        self.seconds = time.time()
     
- 
-    # Convert ROS Image message to OpenCV image
-    current_frame = self.br.imgmsg_to_cv2(data)
 
-    # print(current_frame[0][0])
+        self.current_frame = None
+
+        
+        # Used to convert between ROS and OpenCV images
+        self.br = CvBridge()
+
 
     
-    self.mynode.main()
-    
-    result = cv2.warpPerspective(current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
+        self.publisher_scan = self.create_publisher(LaserScan, '/scan', 10)
 
-    # cv2.imshow("camera", result)
-    
-    result2 = result.copy()
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, self)
 
-
-
+    def euler_from_quaternion(self,x, y, z, w):
+            """
+            Convert a quaternion into euler angles (roll, pitch, yaw)
+            roll is rotation around x in radians (clockwise)
+            pitch is rotation around y in radians (clockwise)
+            yaw is rotation around z in radians (clockwise)
+            """
+            t0 = +2.0 * (w * x + y * z)
+            t1 = +1.0 - 2.0 * (x * x + y * y)
+            roll_x = math.atan2(t0, t1)
+        
+            t2 = +2.0 * (w * y - z * x)
+            t2 = +1.0 if t2 > +1.0 else t2
+            t2 = -1.0 if t2 < -1.0 else t2
+            pitch_y = math.asin(t2)
+        
+            t3 = +2.0 * (w * z + x * y)
+            t4 = +1.0 - 2.0 * (y * y + z * z)
+            yaw_z = math.atan2(t3, t4)
+        
+            return [round(math.degrees(roll_x),3), round(pitch_y,5), round(math.degrees(yaw_z),3)]  # in degree
    
-    #crate lidar line
-    length = 600
-    angles = []
-    for i in range(-90,90,1):
-        angles.append(i)
-    # print(angles)
+    def listener_callback(self, data):
+        """
+        Callback function.
+        """
+        # self.seconds = time.time()
 
-    # Draw lines with different angles
-    for angle in angles:
-        radians = angle * np.pi / 180
-        x2 = int(length * np.cos(radians))
-        y2 = int(length * np.sin(radians))
-        result2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
-    # result2 = cv2.line(result2, (0,700), (800,0), (0,0,0), 1)
 
-    result = abs(result-result2)
-    self.publisher_.publish(self.br.cv2_to_imgmsg(result, encoding='rgb8'))
+        # #################################################################################
+        # # Store frame names in variables that will be used to
+        # # compute transformations
+        # from_frame_rel = 'camera'
+        # to_frame_rel = 'base_footprint'
 
-    print(time.time() - self.seconds)
-    self.seconds = time.time()
+        # # from_frame_rel = 'base_footprint'
+        # # to_frame_rel = 'camera'
 
-    # cv2.imshow("camera", result)
+        # try:
+        #     t = self.tf_buffer.lookup_transform(
+        #         to_frame_rel,
+        #         from_frame_rel,
+        #         rclpy.time.Time())
+        # except TransformException as ex:
+        #     self.get_logger().info(
+        #         f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
+        #     return
+        
+        # self.camera_pose = self.euler_from_quaternion(
+        #     t.transform.rotation.x,
+        #     t.transform.rotation.y,
+        #     t.transform.rotation.z,
+        #     t.transform.rotation.w)
+        # self.camera_pose.append(t.transform.translation.z)   
+        # # print(self.camera_pose)
+        # # print(self.camera_pose)
+        # pi[:] = self.camera_pose
+        # # print(pi[:])
+        # #################################################################################
     
-    # cv2.waitKey(1)
+
+        # Display the message on the console
+        # self.get_logger().info('Receiving video frame')
+        
+    
+        # Convert ROS Image message to OpenCV image
+        self.current_frame = self.br.imgmsg_to_cv2(data)
+
+        # print(current_frame[0][0])
+
+        #########################################################################################3
+        # self.mynode.main()
+        
+        # result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
+
+        # # cv2.imshow("camera", result)
+        
+
+
+
+
+
+
+        # result2 = result.copy()
+    
+        # #crate lidar line
+        # length = 600
+        # angles = []
+        # for i in range(-90,90,1):
+        #     angles.append(i)
+        # # print(angles)
+
+        # # Draw lines with different angles
+        # for angle in angles:
+        #     radians = angle * np.pi / 180
+        #     x2 = int(length * np.cos(radians))
+        #     y2 = int(length * np.sin(radians))
+        #     result2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
+        # # result2 = cv2.line(result2, (0,700), (800,0), (0,0,0), 1)
+
+        # result = abs(result-result2)
+
+        # ## for ball detection
+        # # img = np.zeros((self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), 3), dtype = np.uint8)
+        # # img[25,25] = [255 255 255]
+
+
+
+
+
+
+        # self.publisher_.publish(self.br.cv2_to_imgmsg(result, encoding='rgb8'))
+        # self.publisher_.publish(self.br.cv2_to_imgmsg(current_frame, encoding='rgb8'))
+
+        
+        
+
+        # cv2.imshow("camera", result)
+        
+        # cv2.waitKey(1)
+    def timer(self):
+
+        self.seconds = time.time()
+        #################################################################################
+        # Store frame names in variables that will be used to
+        # compute transformations
+        from_frame_rel = 'camera'
+        to_frame_rel = 'base_footprint'
+
+        # from_frame_rel = 'base_footprint'
+        # to_frame_rel = 'camera'
+
+        try:
+            t = self.tf_buffer.lookup_transform(
+                to_frame_rel,
+                from_frame_rel,
+                rclpy.time.Time())
+                # self.get_clock().now())
+        except TransformException as ex:
+            self.get_logger().info(
+                f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
+            return
+        
+        self.camera_pose = self.euler_from_quaternion(
+            t.transform.rotation.x,
+            t.transform.rotation.y,
+            t.transform.rotation.z,
+            t.transform.rotation.w)
+        self.camera_pose.append(t.transform.translation.z)   
+        # print(self.camera_pose)
+        # print(self.camera_pose)
+        pi[:] = self.camera_pose
+        # print(pi[:])
+
+        #################################################################################
+        self.mynode.main()
+        
+        # result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
+        result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), 8)
+
+        cv2.imshow("camera", result)
+        # cv2.imshow("camera", self.current_frame)
+        
+        cv2.waitKey(1)
+
+        # # cv2.imshow("camera", result)
+
+        print(rclpy.time.Time())
+        
+
+
+        # result2 = result.copy()
+    
+        # #crate lidar line
+        # length = 600
+        # angles = []
+        # for i in range(-90,90,1):
+        #     angles.append(i)
+        # # print(angles)
+
+        # # Draw lines with different angles
+        # for angle in angles:
+        #     radians = angle * np.pi / 180
+        #     x2 = int(length * np.cos(radians))
+        #     y2 = int(length * np.sin(radians))
+        #     result2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
+        # # result2 = cv2.line(result2, (0,700), (800,0), (0,0,0), 1)
+
+        # result = abs(result-result2)
+
+        # ## for ball detection
+        # # img = np.zeros((self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), 3), dtype = np.uint8)
+        # # img[25,25] = [255 255 255]
+
+
+
+        self.publisher_.publish(self.br.cv2_to_imgmsg(result, encoding='rgb8'))
+        # self.publisher_.publish(self.br.cv2_to_imgmsg(self.current_frame, encoding='rgb8'))
+
+        # print(1/(time.time() - self.seconds))
 
 
 def main():
-    rclpy.init()
-    node1 = FrameListener()
-    node2 = ImageSubscriber()
-
-    executor = MultiThreadedExecutor()
-
-    # Add nodes to the executor
-    executor.add_node(node1)
-    executor.add_node(node2)
-
-    # Spin the nodes concurrently using the executor
-    executor.spin()
-
-    # Cleanup
-    executor.shutdown()
-    rclpy.shutdown()
-
     # rclpy.init()
-    # node = FrameListener()
+    # node1 = FrameListener()
     # node2 = ImageSubscriber()
-    # try:
-    #     rclpy.spin(node)
-    #     rclpy.spin(node2)
-    # except KeyboardInterrupt:
-    #     pass
 
+    # executor = MultiThreadedExecutor()
+
+    # # Add nodes to the executor
+    # executor.add_node(node1)
+    # executor.add_node(node2)
+
+    # # Spin the nodes concurrently using the executor
+    # executor.spin()
+
+    # # Cleanup
+    # executor.shutdown()
     # rclpy.shutdown()
+
+    rclpy.init()
+    # node = FrameListener()
+    node2 = ImageSubscriber()
+    try:
+        # rclpy.spin(node)
+        rclpy.spin(node2)
+    except KeyboardInterrupt:
+        pass
+
+    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

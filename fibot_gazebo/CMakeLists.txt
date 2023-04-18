@@ -45,6 +45,7 @@ ament_python_install_package(${PROJECT_NAME})
 # Install Python executables
 install(PROGRAMS
   scripts/publisher_trajectory.py
+  scripts/publisher_quintic_traj.py
 
   DESTINATION lib/${PROJECT_NAME}
 )

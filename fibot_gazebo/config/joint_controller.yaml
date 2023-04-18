@@ -55,13 +55,13 @@ joint_trajectory_controller:
     #     - d: 300
       
     state_publish_rate: 50.0
-    action_monitor_rate: 20.0
+    action_monitor_rate: 30.0
 
     allow_partial_joints_goal: false
     open_loop_control: true
     constraints:
-      stopped_velocity_tolerance: 0.01
+      stopped_velocity_tolerance: 0.001
       goal_time: 0.0
       yaw_camera_joint:
-        trajectory: 0.05
+        trajectory: 0.001
         goal: 0.0
