@@ -95,7 +95,7 @@
 
   <!-- ############################################################## macro robot's hip ####################################################-->
 
-  <xacro:macro name="hip" params='prefix reflect'>
+  <xacro:macro name="hip" params='prefix reflect member parent'>
     <link name="${prefix}_hip_link">
       <visual>
         <origin xyz="0 0 0"/>
@@ -115,15 +115,15 @@
     <joint name="base_link_to_${prefix}_hip_link" type="continuous">
       <parent link="base_link"/>
       <child link="${prefix}_hip_link"/>
-      <origin xyz="${0.0305*reflect} 0 ${-(base_height+right_hip_height)/2}"/>
+      <origin xyz="${0.054*reflect} 0 ${-(base_height+right_hip_height)/2}"/>
     </joint>
   </xacro:macro>
   <xacro:hip prefix="right" reflect="1"/>
   <xacro:hip prefix="left" reflect="-1"/>
 
   <!-- ############################################################## macro robot's bum ####################################################-->
-  <xacro:macro name="bum" params="prefix ">
-    <link name="${prefix}_bum_link">
+  <xacro:macro name="bum" params="prefix member parent z_origin">
+    <link name="${prefix}_${member}_link">
       <visual>
         <origin xyz="0 -0.0221 0"/>
         <geometry>
@@ -138,15 +138,21 @@
       </collision>
     </link>
 
-    <joint name="${prefix}_hip_to_${prefix}_bum" type="fixed">
-      <parent link="${prefix}_hip_link"/>
-      <child link="${prefix}_bum_link"/>
-      <origin xyz="0 0 ${-right_bum_height/2}"/>
+    <joint name="${prefix}_${parent}_to_${prefix}_${member}" type="fixed">
+      <parent link="${prefix}_${parent}_link"/>
+      <child link="${prefix}_${member}_link"/>
+      <origin xyz="0 0 ${z_origin}"/>
     </joint>
       <!-- origin may been wong because 'z' may be not bum height divine by 2, it might increse in 'z' axis -->
   </xacro:macro>
-  <xacro:bum prefix="right"/>
-  <xacro:bum prefix="left"/>
+  <!-- right hip link to right bum link-->
+  <xacro:bum prefix="right" member="bum" parent="hip" z_origin="${-right_bum_height/2}"/>   
+  <!-- left hip link to left bum link -->
+  <xacro:bum prefix="left" member="bum" parent="hip" z_origin="${-right_bum_height/2}"/>
+  <!-- right ankel link to right lower leg-->
+  <xacro:bum prefix="right" member="ankel" parent="lower_leg" z_origin="${-lower_leg_height}"/>
+  <!-- left ankel link to left lower leg -->
+  <xacro:bum prefix="left" member="ankel" parent="lower_leg" z_origin="${-lower_leg_height}"/> 
   
 
   <!--########################################################## macro robot's upper leg #######################################################-->
@@ -206,7 +212,7 @@
 
   <!--########################################################## macro robot's ankel #######################################################-->
 
-  <xacro:macro name="ankel" params="prefix">
+  <!-- <xacro:macro name="ankel" params="prefix">
     <link name="${prefix}_ankel_link">
       <visual>
         <origin xyz="0 -0.0221 0"/>
@@ -229,7 +235,7 @@
     </joint>
   </xacro:macro>
   <xacro:ankel prefix="right"/>
-  <xacro:ankel prefix="left"/>
+  <xacro:ankel prefix="left"/> -->
 </robot>
 
   <!--########################################################## macro robot's upper foot #######################################################-->
