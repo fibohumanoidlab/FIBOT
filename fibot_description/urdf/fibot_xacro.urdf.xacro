@@ -1,12 +1,7 @@
 <?xml version="1.0"?>
 <robot name="macroed" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- <xacro:property name="leglen" value="0.6" />
-  <xacro:property name="polelen" value="0.2" />
-  <xacro:property name="bodylen" value="0.6" />
-  <xacro:property name="baselen" value="0.4" />
-  <xacro:property name="wheeldiam" value="0.07" />
-  <xacro:property name="pi" value="3.1415" /> -->
+ <!-- Unit in this file is determine in meter and kilogram -->
 
 <!-- ###########################################################set up property #################################################################-->
   <xacro:property name="base_width" value="0.156" />
@@ -30,6 +25,18 @@
   <xacro:property name="right_bum_length" value="0.0922"/>
   <xacro:property name="right_bum_height" value="0.06"/>
 
+  <xacro:property name="upper_leg_width" value="0.054"/>
+  <xacro:property name="upper_leg_length" value="0.03"/>
+  <xacro:property name="upper_leg_height" value="0.1553"/>
+
+  <xacro:property name="lower_leg_width" value="0.054"/>
+  <xacro:property name="lower_leg_length" value="0.03"/>
+  <xacro:property name="lower_leg_height" value="0.16039"/>
+
+  <xacro:property name="ankel_width" value="0.048"/>
+  <xacro:property name="ankel_length" value="0.0922"/>
+  <xacro:property name="ankel_height" value="0.06"/>
+
   <xacro:property name="pi" value="3.1415"/>
 <!-- ###########################################################set up property #################################################################-->
 
@@ -45,6 +52,22 @@
   <material name="white">
     <color rgba="1 1 1 1"/>
   </material>
+
+  <material name="red">
+  <color rgba="1 0 0 1"/>
+  </material>
+
+  <material name="yellow">
+  <color rgba="1 1 0 1"/>
+  </material>
+
+  <material name="turqouise">
+  <color rgba="0 1 1 1"/>
+  </material>
+
+  <material name="violet">
+  <color rgba="1 0 1 1"/>
+  </material>
 <!-- ###########################################################set up material #################################################################-->
 
   <xacro:macro name="base_inertial" params="mass">
@@ -53,17 +76,16 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
     </inertial>
   </xacro:macro>
-
+<!-- add foot_print -->
+<!-- add foot_print -->
   <link name="base_link">
     <visual>
-      <!-- <origin xyz="0 0 ${base_height_pos}"/> -->
       <geometry>
         <box size="${base_width} ${base_length} ${base_height}"/>
       </geometry>
       <material name="blue"/>
     </visual>
     <collision>
-      <!-- <origin xyz="0 0 ${base_height_pos}"/> -->
       <geometry>
         <box size="${base_width} ${base_length} ${base_height}"/>
       </geometry>
@@ -71,7 +93,7 @@
     <xacro:base_inertial mass="0.291"/>
   </link>
 
-  <!-- ############################################################## macro robot hip ####################################################-->
+  <!-- ############################################################## macro robot's hip ####################################################-->
 
   <xacro:macro name="hip" params='prefix reflect'>
     <link name="${prefix}_hip_link">
@@ -99,8 +121,8 @@
   <xacro:hip prefix="right" reflect="1"/>
   <xacro:hip prefix="left" reflect="-1"/>
 
-  <!-- ############################################################## macro robot hip ####################################################-->
-  <xacro:macro name="bum" params="prefix">
+  <!-- ############################################################## macro robot's bum ####################################################-->
+  <xacro:macro name="bum" params="prefix ">
     <link name="${prefix}_bum_link">
       <visual>
         <origin xyz="0 -0.0221 0"/>
@@ -121,9 +143,97 @@
       <child link="${prefix}_bum_link"/>
       <origin xyz="0 0 ${-right_bum_height/2}"/>
     </joint>
+      <!-- origin may been wong because 'z' may be not bum height divine by 2, it might increse in 'z' axis -->
   </xacro:macro>
   <xacro:bum prefix="right"/>
   <xacro:bum prefix="left"/>
+  
 
+  <!--########################################################## macro robot's upper leg #######################################################-->
+  <xacro:macro name="upper_leg" params="prefix">
+    <link name="${prefix}_upper_leg_link">
+      <visual>
+        <origin xyz="0 0 ${-upper_leg_height/2}"/>
+        <geometry>
+          <box size="${upper_leg_width} ${upper_leg_length} ${upper_leg_height}"/>
+        </geometry>
+        <material name="red"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${upper_leg_width} ${upper_leg_length} ${upper_leg_height}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}_bum_to_${prefix}_upper_leg" type="fixed">
+      <parent link="${prefix}_bum_link"/>
+      <child link="${prefix}_upper_leg_link"/>
+      <origin xyz="0 0 0"/>
+      <!-- origin must be the same with bum joint -->
+    </joint>
+
+  </xacro:macro>
+  <xacro:upper_leg prefix="right"/>
+  <xacro:upper_leg prefix="left"/>
+
+  <!--########################################################## macro robot's lower leg #######################################################-->
+
+  <xacro:macro name="lower_leg" params="prefix">
+    <link name="${prefix}_lower_leg_link">
+      <visual>
+        <origin xyz="0 0 ${-lower_leg_height/2}"/>
+        <geometry>
+          <box size="${lower_leg_width} ${lower_leg_length} ${lower_leg_height}"/>
+        </geometry>
+        <material name="yellow"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${lower_leg_width} ${lower_leg_length} ${lower_leg_height}"/>
+        </geometry>
+      </collision>
+    </link>
+
+  <joint name="${prefix}_upper_leg_to_${prefix}_lower_leg" type="fixed">
+    <parent link="${prefix}_upper_leg_link"/>
+    <child link="${prefix}_lower_leg_link"/>
+    <origin xyz="0 0 ${-upper_leg_height}"/>
+  </joint>
+  </xacro:macro>
+  <xacro:lower_leg prefix="right"/>
+  <xacro:lower_leg prefix="left"/>
+
+  <!--########################################################## macro robot's ankel #######################################################-->
+
+  <xacro:macro name="ankel" params="prefix">
+    <link name="${prefix}_ankel_link">
+      <visual>
+        <origin xyz="0 -0.0221 0"/>
+        <geometry>
+          <box size="${ankel_width} ${ankel_length} ${ankel_height}"/>
+        </geometry>
+        <material name="turqouise"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${ankel_width} ${ankel_length} ${ankel_height}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}_lower_leg_to_${prefix}_ankel" type="fixed">
+      <parent link="${prefix}_lower_leg_link"/>
+      <child link="${prefix}_ankel_link"/>
+      <origin xyz="0 0 ${-lower_leg_height}"/>
+    </joint>
+  </xacro:macro>
+  <xacro:ankel prefix="right"/>
+  <xacro:ankel prefix="left"/>
 </robot>
+
+  <!--########################################################## macro robot's upper foot #######################################################-->
+
+
+
 
