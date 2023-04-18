@@ -71,93 +71,59 @@
     <xacro:base_inertial mass="0.291"/>
   </link>
 
-  <link name="right_hip_link">
-    <visual>
-      <origin xyz="0 0 0"/>
+  <!-- ############################################################## macro robot hip ####################################################-->
 
-      <!-- <origin xyz="0.0305 0  ${-(base_height+right_hip_height)/2}"/> -->
-      <geometry>
-        <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <!-- <origin xyz="0.0305 0  ${-(base_height+right_hip_height)/2}"/> -->
-      <geometry>
-        <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
-      </geometry>
-    </collision>
-  </link>
+  <xacro:macro name="hip" params='prefix reflect'>
+    <link name="${prefix}_hip_link">
+      <visual>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
+        </geometry>
+      </collision>
+    </link>
 
-  <joint name="base_link_to_rigth_hip_link" type="continuous">
-    <parent link="base_link"/>
-    <child link="right_hip_link"/>
-    <!-- <origin xyz="0 0.0305 ${base_height/2}"/> -->
-    <origin xyz="0.0305 0 ${-(base_height+right_hip_height)/2}"/>
-  </joint>
+    <joint name="base_link_to_${prefix}_hip_link" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_hip_link"/>
+      <origin xyz="${0.0305*reflect} 0 ${-(base_height+right_hip_height)/2}"/>
+    </joint>
+  </xacro:macro>
+  <xacro:hip prefix="right" reflect="1"/>
+  <xacro:hip prefix="left" reflect="-1"/>
 
-  <link name="right_bum_link">
-    <visual>
-      <origin xyz="0 -0.0221 0"/>
-      <geometry>
-        <box size="${right_bum_width} ${right_bum_length} ${right_bum_height}"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-    <collision>
-      <geometry>
-        <box size="${right_bum_width} ${right_bum_length} ${right_bum_height}"/>
-      </geometry>
-    </collision>
-  </link>
+  <!-- ############################################################## macro robot hip ####################################################-->
+  <xacro:macro name="bum" params="prefix">
+    <link name="${prefix}_bum_link">
+      <visual>
+        <origin xyz="0 -0.0221 0"/>
+        <geometry>
+          <box size="${right_bum_width} ${right_bum_length} ${right_bum_height}"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${right_bum_width} ${right_bum_length} ${right_bum_height}"/>
+        </geometry>
+      </collision>
+    </link>
 
-  <joint name="right_hip_to_right_bum" type="fixed">
-    <parent link="right_hip_link"/>
-    <child link="right_bum_link"/>
-    <origin xyz="0 0 ${-right_bum_height/2}"/>
-  </joint>
-  
-
-
-
-  <!-- <link name="right_foot">
-    <visual>
-      <origin xyz="0 0.5 ${foot_height/2}" />   
-      <geometry>
-        <box size="${foot_width} ${foot_length} ${foot_height}"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-  </link>
-
-  <link name="upper_right_foot">
-    <visual>
-      <origin xyz="0 0 ${foot_height/2}" />   
-      <geometry>
-        <box size="${upper_foot_width} ${upper_foot_length} ${upper_foot_height}"/>
-      </geometry>
-      <material name="blue"/>
-    </visual>
-  </link>
-
-  <joint name="right_foot_to_upper_right_foot" type="fixed">
-    <parent link="upper_right_foot"/>
-    <child link="right_foot"/>
-    <origin xyz="0 0 ${foot_height/2}"/>
-  </joint>
-
-  <link name="left_foot">
-    <visual>
-
-      <origin xyz="0 -0.5 ${foot_height/2}"/>   
-      <geometry>
-        <box size="${foot_width} ${foot_length} ${foot_height}"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-  </link> -->
-
+    <joint name="${prefix}_hip_to_${prefix}_bum" type="fixed">
+      <parent link="${prefix}_hip_link"/>
+      <child link="${prefix}_bum_link"/>
+      <origin xyz="0 0 ${-right_bum_height/2}"/>
+    </joint>
+  </xacro:macro>
+  <xacro:bum prefix="right"/>
+  <xacro:bum prefix="left"/>
 
 </robot>
 
