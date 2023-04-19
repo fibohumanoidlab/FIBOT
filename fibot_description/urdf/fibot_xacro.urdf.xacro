@@ -111,14 +111,14 @@
   <xacro:macro name="hip" params='prefix reflect member parent z_origin'>
     <link name="${prefix}_${member}_link">
       <visual>
-        <origin xyz="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
           <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
         </geometry>
         <material name="black"/>
       </visual>
       <collision>
-        <origin xyz="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
           <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
         </geometry>
@@ -126,9 +126,10 @@
     </link>
 
     <joint name="${parent}_to_${prefix}_${member}_link" type="continuous">
+      <axis xyz="0 1 0" rpy="0 0 0"/>
       <parent link="${parent}"/>
       <child link="${prefix}_${member}_link"/>
-      <origin xyz="${0.054*reflect} 0 ${z_origin}"/>
+      <origin xyz="${0.054*reflect} 0 ${z_origin}" rpy="0 0 0"/>
     </joint>
   </xacro:macro>
   <xacro:hip prefix="right" reflect="1" member="hip" parent="base_link" z_origin="${-(base_height+right_hip_height)/2}"/>

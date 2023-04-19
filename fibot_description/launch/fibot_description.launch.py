@@ -8,9 +8,10 @@ from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 import os
+import xacro
 
 def generate_launch_description():
-    default_model_path = os.path.join(get_package_share_path('fibot_description'),'fibot001.urdf')
+    default_model_path = os.path.join(get_package_share_path('fibot_description'),'fibot001.urdf.xacro')
     default_rviz_config_path = os.path.join(get_package_share_path('fibot_description'),'urdf.rviz') 
 
     gui_arg = DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],
@@ -22,17 +23,20 @@ def generate_launch_description():
 
     # robot_description = ParameterValue(Command(['urdf', LaunchConfiguration('model')]),
     #                                    value_type=str)
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     # with open(default_model_path, 'r') as infp:
     #     robot_desc = infp.read()
+    doc = xacro.parse(open(default_model_path))
+    xacro.process_doc(doc)
+    params = {'robot_description': doc.toxml()}
+
 
     robot_state_publisher_node = Node(
         name='fibot_robot',
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{'use_sim_time': use_sim_time}],
-        arguments=[default_model_path],
-        
+        parameters=[{'use_sim_time': use_sim_time},params],
+        # arguments=[default_model_path],
     )
 
     # Depending on gui parameter, either launch joint_state_publisher or joint_state_publisher_gui
@@ -47,8 +51,8 @@ def generate_launch_description():
         package='joint_state_publisher_gui',
         executable='joint_state_publisher_gui',
         condition=IfCondition(LaunchConfiguration('gui')),
-        parameters=[{'use_sim_time': use_sim_time}],
-        arguments=[default_model_path]
+        parameters=[{'use_sim_time': use_sim_time},params],
+        # arguments=[default_model_path]
     )
 
 
