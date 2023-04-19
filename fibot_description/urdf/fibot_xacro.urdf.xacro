@@ -37,6 +37,10 @@
   <xacro:property name="ankel_length" value="0.0922"/>
   <xacro:property name="ankel_height" value="0.06"/>
 
+  <xacro:property name="foot_width" value="0.09"/>
+  <xacro:property name="foot_length" value="0.165"/>
+  <xacro:property name="foot_height" value="0.027"/>
+
   <xacro:property name="pi" value="3.1415"/>
 <!-- ###########################################################set up property #################################################################-->
 
@@ -77,9 +81,18 @@
     </inertial>
   </xacro:macro>
 <!-- add foot_print -->
+  <!-- <link name="foot_print">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0 0 0"/>
+      </geometry>
+    </visual>
+  </link> -->
 <!-- add foot_print -->
   <link name="base_link">
     <visual>
+      <origin xyz="0 0 0"/>
       <geometry>
         <box size="${base_width} ${base_length} ${base_height}"/>
       </geometry>
@@ -95,8 +108,8 @@
 
   <!-- ############################################################## macro robot's hip ####################################################-->
 
-  <xacro:macro name="hip" params='prefix reflect member parent'>
-    <link name="${prefix}_hip_link">
+  <xacro:macro name="hip" params='prefix reflect member parent z_origin'>
+    <link name="${prefix}_${member}_link">
       <visual>
         <origin xyz="0 0 0"/>
         <geometry>
@@ -112,14 +125,18 @@
       </collision>
     </link>
 
-    <joint name="base_link_to_${prefix}_hip_link" type="continuous">
-      <parent link="base_link"/>
-      <child link="${prefix}_hip_link"/>
-      <origin xyz="${0.054*reflect} 0 ${-(base_height+right_hip_height)/2}"/>
+    <joint name="${parent}_to_${prefix}_${member}_link" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}_${member}_link"/>
+      <origin xyz="${0.054*reflect} 0 ${z_origin}"/>
     </joint>
   </xacro:macro>
-  <xacro:hip prefix="right" reflect="1"/>
-  <xacro:hip prefix="left" reflect="-1"/>
+  <xacro:hip prefix="right" reflect="1" member="hip" parent="base_link" z_origin="${-(base_height+right_hip_height)/2}"/>
+  <xacro:hip prefix="left" reflect="-1" member="hip" parent="base_link" z_origin="${-(base_height+right_hip_height)/2}"/>
+
+  <xacro:hip prefix="right" reflect="0" member="upper_foot" parent="right_ankel_link" z_origin="${-ankel_height/2}"/>
+  <xacro:hip prefix="left" reflect="0" member="upper_foot" parent="left_ankel_link" z_origin="${-ankel_height/2}"/>
+
 
   <!-- ############################################################## macro robot's bum ####################################################-->
   <xacro:macro name="bum" params="prefix member parent z_origin">
@@ -210,32 +227,33 @@
   <xacro:lower_leg prefix="right"/>
   <xacro:lower_leg prefix="left"/>
 
-  <!--########################################################## macro robot's ankel #######################################################-->
+  <!--########################################################## macro robot's foot #######################################################-->
 
-  <!-- <xacro:macro name="ankel" params="prefix">
-    <link name="${prefix}_ankel_link">
+  <xacro:macro name="foot" params="prefix reflect">
+    <link name="${prefix}_foot_link">
       <visual>
-        <origin xyz="0 -0.0221 0"/>
+        <origin xyz="0 0 0"/>
         <geometry>
-          <box size="${ankel_width} ${ankel_length} ${ankel_height}"/>
+          <box size="${foot_width} ${foot_length} ${foot_height}"/>
         </geometry>
         <material name="turqouise"/>
       </visual>
       <collision>
         <geometry>
-          <box size="${ankel_width} ${ankel_length} ${ankel_height}"/>
+          <box size="${foot_width} ${foot_length} ${foot_height}"/>
         </geometry>
       </collision>
     </link>
 
-    <joint name="${prefix}_lower_leg_to_${prefix}_ankel" type="fixed">
-      <parent link="${prefix}_lower_leg_link"/>
-      <child link="${prefix}_ankel_link"/>
-      <origin xyz="0 0 ${-lower_leg_height}"/>
+    <joint name="${prefix}_upper_foot_to_${prefix}_foot" type="fixed">
+      <parent link="${prefix}_upper_foot_link"/>
+      <child link="${prefix}_foot_link"/>
+      <origin xyz="${0.018*reflect} -0.00989 0"/>
     </joint>
   </xacro:macro>
-  <xacro:ankel prefix="right"/>
-  <xacro:ankel prefix="left"/> -->
+  <xacro:foot prefix="right" reflect="1"/>
+  <xacro:foot prefix="left" reflect="-1"/>
+
 </robot>
 
   <!--########################################################## macro robot's upper foot #######################################################-->
