@@ -19,11 +19,13 @@ controller_manager:
 forward_command_controller:
   ros__parameters:
 
-    publish_rate: 1000.0 # You can set this higher than the controller manager update rate, but it will be throttled
+    publish_rate: 100.0 # You can set this higher than the controller manager update rate, but it will be throttled
 
-    joints: ['yaw_camera_joint']
+    joints: ['camera_joint']
 
     interface_name: position
+
+    # command_interfaces: position
 
 # joint_trajectory_controller:
 #   ros__parameters:
@@ -33,7 +35,7 @@ forward_command_controller:
 
 joint_trajectory_controller:
   ros__parameters:
-    publish_rate: 100.0
+    publish_rate: 50.0
     joints:
       - yaw_camera_joint
       - camera_joint
@@ -41,18 +43,23 @@ joint_trajectory_controller:
 
     command_interfaces:
       - position
+      # - position
       # - velocity
 
     state_interfaces:
       - position
+      # - position
       # - velocity
     
    
     # gains:
-    #   yaw_camera_joint:
-    #     - p: 100
-    #     - i: 200
-    #     - d: 300
+    #   camera_joint:
+    #     - p: 20.0
+    #     - i: 0.0
+    #     - d: 1.0
+    #     - i_clamp: 1
+    gains: # Required because we're controlling a velocity interface
+      camera_joint: {p: 120,  d: 5, i: 30, i_clamp: 1}
       
     state_publish_rate: 50.0
     action_monitor_rate: 30.0
@@ -60,8 +67,11 @@ joint_trajectory_controller:
     allow_partial_joints_goal: false
     open_loop_control: true
     constraints:
-      stopped_velocity_tolerance: 0.001
-      goal_time: 0.0
+      stopped_velocity_tolerance: 0.0001
+      goal_time: 0.0005
       yaw_camera_joint:
+        trajectory: 0.001
+        goal: 0.0
+      camera_joint:
         trajectory: 0.001
         goal: 0.0

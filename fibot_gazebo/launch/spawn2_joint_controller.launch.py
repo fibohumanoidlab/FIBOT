@@ -109,12 +109,13 @@ def generate_launch_description():
     #     parameters=[{'use_sim_time': True}],
     #     ),
 
-    Node(
-        package='localization_pkg',
-        executable='ball_localization.py',
-        name='ball_localization',
-        parameters=[{'use_sim_time': True}],
-        ),
+    # Node(
+    #     package='localization_pkg',
+    #     executable='ball_localization.py',
+    #     name='ball_localization',
+    #     parameters=[{'use_sim_time': True}],
+    #     output='screen'
+    #     ),
         
     
     # Node(
@@ -133,9 +134,9 @@ def generate_launch_description():
     #     ),
     
     joint_broad_spawner,
-    # forward_command_controller,
+    forward_command_controller,
     # joint_state_controller,
-    joint_trajectory_controller,
+    # joint_trajectory_controller,
 
     Node(
         package='gazebo_ros',

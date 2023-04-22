@@ -23,7 +23,11 @@ from rclpy.executors import MultiThreadedExecutor
 
 from std_msgs.msg import Float32
 
+import tf2_ros
 
+from rclpy.time import Time
+
+sua = []
 # ===================================== #
 # camera calibration matrix K
 fx = 1360.3838
@@ -33,7 +37,7 @@ py = 540.5
 
 # rotation matrix R (in deg)
 yaw =    0.0
-# pitch =  30.0
+# pitch = None
 pi = []
 roll =   0.0 #right hand
 
@@ -91,7 +95,7 @@ class FrameListener(Node):
         t4 = +1.0 - 2.0 * (y * y + z * z)
         yaw_z = math.atan2(t3, t4)
      
-        return [round(math.degrees(roll_x),3), round(pitch_y,5), round(math.degrees(yaw_z),3)]  # in degree
+        return [round(roll_x,5), round(pitch_y,5), round(yaw_z,5)]  # in degree
 
     def on_timer(self):
     
@@ -140,6 +144,8 @@ class FrameListener(Node):
         msg_str = Float32()
         msg_str.data = round(pi[1],5)
         self.publisher.publish(msg_str)
+
+        # print(t.transform.translation.x)
       
 
         # print(self.euler_from_quaternion(
@@ -192,27 +198,39 @@ class Camera():
         
         # self.project = None
         # self.timer = self.create_timer(0.01, self.main)
-        # self.setK(fx, fy, px, py)
+        self.setK(fx, fy, px, py)
         # self.setR(np.deg2rad(yaw), np.deg2rad(pitch), np.deg2rad(roll))
         # self.setT(XCam, YCam, ZCam)
         # self.project = self.updateP()
+
+        # self.camera_pose = ImageSubscriber()
     
     def main(self):
         # self.test=0
-        self.test = self.test+2
-        self.setK(fx, fy, px, py)
+        # self.test = self.test+2
+        # self.setK(fx, fy, px, py)
         # self.setR(np.deg2rad(yaw), np.deg2rad(pitch), np.deg2rad(roll))
-        self.setR(np.deg2rad(yaw), pi[1], np.deg2rad(roll))
-        # self.setR(np.deg2rad(yaw), 0.65, np.deg2rad(roll))
-        # self.setT(XCam, YCam, ZCam)
-        self.setT(XCam, YCam, pi[3])
-        self.project = self.updateP()
+        # self.setR(pi[2], pi[1], pi[0]) #yaw pitch roll
+        # # self.setR(np.deg2rad(yaw), 0.65, np.deg2rad(roll))
+        # # self.setT(XCam, YCam, ZCam)
+        # self.setT(XCam, YCam, pi[3])
+        # self.project = self.updateP()
         # print(pi)
         # p = [0,1]
         # print(p)
         
         # print(pi[:])
         # print("")
+
+
+        self.setR(pi[2], pi[1], pi[0]) #yaw pitch roll
+        self.setT(XCam, YCam, pi[3])
+        self.project = self.updateP()
+
+        # self.setR(pi[2], sua[0] , pi[0]) #yaw pitch roll
+        # self.setT(XCam, YCam, pi[3])
+        # self.project = self.updateP()
+    
         
 
 
@@ -263,22 +281,40 @@ class ImageSubscriber(Node):
         Image, 
         '/camera1/image_raw', 
         self.listener_callback, 
-        1)
+        2)
         self.subscription # prevent unused variable warning
 
-        self.timer_ = self.create_timer(0.015, self.timer)
 
-        self.publisher_ = self.create_publisher(Image, 'line', 1)
+        self.subscription2 = self.create_subscription(
+            Float32,
+            'traj_test',
+            self.listener_callback2,
+            10)
+
+        self.timer_ = self.create_timer(0.025, self.timer)
+
+        self.publisher_ = self.create_publisher(Image, 'line', 10)
+
+        self.publisher2 = self.create_publisher(Float32, 'traj_sua', 5)
+
+        
 
         self.mynode = Topview()
         self.seconds = time.time()
     
 
-        self.current_frame = None
+        self.current_frame = Time()
+        self.img_timestamp = None
+        # self.img_timestamp.sec = 0
+        # self.img_timestamp.nanosec = 0
 
         
         # Used to convert between ROS and OpenCV images
         self.br = CvBridge()
+
+        self.pitch = None
+
+        
 
 
     
@@ -286,6 +322,18 @@ class ImageSubscriber(Node):
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
+    
+    def listener_callback2(self, msg):
+        # pi[0] = msg.data
+        # self.pitch = msg.data
+
+        # return pit
+        self.pitch = msg.data
+       
+        # pi[:] = 0
+        
+        # print(sua[0])
+        # return msg.data
 
     def euler_from_quaternion(self,x, y, z, w):
             """
@@ -294,20 +342,37 @@ class ImageSubscriber(Node):
             pitch is rotation around y in radians (clockwise)
             yaw is rotation around z in radians (clockwise)
             """
-            t0 = +2.0 * (w * x + y * z)
-            t1 = +1.0 - 2.0 * (x * x + y * y)
-            roll_x = math.atan2(t0, t1)
+            # t0 = +2.0 * (w * x + y * z)
+            # t1 = +1.0 - 2.0 * (x * x + y * y)
+            # roll_x = math.atan2(t0, t1)
         
-            t2 = +2.0 * (w * y - z * x)
-            t2 = +1.0 if t2 > +1.0 else t2
-            t2 = -1.0 if t2 < -1.0 else t2
-            pitch_y = math.asin(t2)
+            # t2 = +2.0 * (w * y - z * x)
+            # t2 = +1.0 if t2 > +1.0 else t2
+            # t2 = -1.0 if t2 < -1.0 else t2
+            # pitch_y = math.asin(t2)
         
-            t3 = +2.0 * (w * z + x * y)
-            t4 = +1.0 - 2.0 * (y * y + z * z)
-            yaw_z = math.atan2(t3, t4)
+            # t3 = +2.0 * (w * z + x * y)
+            # t4 = +1.0 - 2.0 * (y * y + z * z)
+            # yaw_z = math.atan2(t3, t4)
         
-            return [round(math.degrees(roll_x),3), round(pitch_y,5), round(math.degrees(yaw_z),3)]  # in degree
+            # return [round(math.degrees(roll_x),3), round(pitch_y,5), round(math.degrees(yaw_z),3)]  # in degree
+
+            # Compute the Euler angles in radians
+            sinr_cosp = 2 * (w * x + y * z)
+            cosr_cosp = 1 - 2 * (x**2 + y**2)
+            roll = math.atan2(sinr_cosp, cosr_cosp)
+
+            sinp = 2 * (w * y - z * x)
+            if abs(sinp) >= 1:
+                pitch = math.copysign(np.pi / 2, sinp)
+            else:
+                pitch = math.asin(sinp)
+
+            siny_cosp = 2 * (w * z + x * y)
+            cosy_cosp = 1 - 2 * (y**2 + z**2)
+            yaw = math.atan2(siny_cosp, cosy_cosp)
+
+            return [roll ,pitch ,yaw]
    
     def listener_callback(self, data):
         """
@@ -355,14 +420,22 @@ class ImageSubscriber(Node):
         # Convert ROS Image message to OpenCV image
         self.current_frame = self.br.imgmsg_to_cv2(data)
 
-        # print(current_frame[0][0])
+        # self.img_timestamp.sec = data.header.stamp.sec
+        # self.img_timestamp.nanosec = data.header.stamp.nanosec
+
+        self.img_timestamp = data.header.stamp
+        # self.img_timestamp =Time.nanoseconds(data.header.stamp.nanosec)
+
+        
+
+        # print((self.img_timestamp))
 
         #########################################################################################3
-        # self.mynode.main()
+    #     # self.mynode.main()
         
-        # result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
+    #     result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
 
-        # # cv2.imshow("camera", result)
+    #     # cv2.imshow("camera", result)
         
 
 
@@ -370,36 +443,36 @@ class ImageSubscriber(Node):
 
 
 
-        # result2 = result.copy()
+    #     result2 = result.copy()
     
-        # #crate lidar line
-        # length = 600
-        # angles = []
-        # for i in range(-90,90,1):
-        #     angles.append(i)
-        # # print(angles)
+    #     #crate lidar line
+    #     length = 600
+    #     angles = []
+    #     for i in range(-90,90,1):
+    #         angles.append(i)
+    #     # print(angles)
 
-        # # Draw lines with different angles
-        # for angle in angles:
-        #     radians = angle * np.pi / 180
-        #     x2 = int(length * np.cos(radians))
-        #     y2 = int(length * np.sin(radians))
-        #     result2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
-        # # result2 = cv2.line(result2, (0,700), (800,0), (0,0,0), 1)
+    #     # Draw lines with different angles
+    #     for angle in angles:
+    #         radians = angle * np.pi / 180
+    #         x2 = int(length * np.cos(radians))
+    #         y2 = int(length * np.sin(radians))
+    #         result2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
+    #     # result2 = cv2.line(result2, (0,700), (800,0), (0,0,0), 1)
 
-        # result = abs(result-result2)
+    #     result = abs(result-result2)
 
-        # ## for ball detection
-        # # img = np.zeros((self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), 3), dtype = np.uint8)
-        # # img[25,25] = [255 255 255]
-
-
+    #     ## for ball detection
+    #     # img = np.zeros((self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), 3), dtype = np.uint8)
+    #     # img[25,25] = [255 255 255]
 
 
 
 
-        # self.publisher_.publish(self.br.cv2_to_imgmsg(result, encoding='rgb8'))
-        # self.publisher_.publish(self.br.cv2_to_imgmsg(current_frame, encoding='rgb8'))
+
+
+    #     self.publisher_.publish(self.br.cv2_to_imgmsg(result, encoding='rgb8'))
+    #     # self.publisher_.publish(self.br.cv2_to_imgmsg(current_frame, encoding='rgb8'))
 
         
         
@@ -407,6 +480,7 @@ class ImageSubscriber(Node):
         # cv2.imshow("camera", result)
         
         # cv2.waitKey(1)
+
     def timer(self):
 
         self.seconds = time.time()
@@ -424,7 +498,7 @@ class ImageSubscriber(Node):
                 to_frame_rel,
                 from_frame_rel,
                 rclpy.time.Time())
-                # self.get_clock().now())
+                # rclpy.time.Time(self.img_timestamp))
         except TransformException as ex:
             self.get_logger().info(
                 f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
@@ -438,52 +512,95 @@ class ImageSubscriber(Node):
         self.camera_pose.append(t.transform.translation.z)   
         # print(self.camera_pose)
         # print(self.camera_pose)
+
         pi[:] = self.camera_pose
+        sua[:] = [self.pitch, self.pitch]
+        # print(sua)
+
         # print(pi[:])
+        # print(t.transform.translation.z)
+
+        # msg2 = Float32()
+        # msg2.data = math.degrees(pi[1]) 
+        # self.publisher2.publish(msg2)
 
         #################################################################################
         self.mynode.main()
-        
-        # result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
-        result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), 8)
 
-        cv2.imshow("camera", result)
-        # cv2.imshow("camera", self.current_frame)
+        # print((self.img_timestamp))
+
+
+
+
         
-        cv2.waitKey(1)
+        result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), flags=cv2.INTER_LINEAR)
+        # result = cv2.warpPerspective(self.current_frame, self.mynode.IPMs, (self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), 8)
+
+        # cv2.imshow("camera", result)
+        # # cv2.imshow("camera", self.current_frame)
+        
+        # cv2.waitKey(1)
 
         # # cv2.imshow("camera", result)
 
-        print(rclpy.time.Time())
+        # print(rclpy.time.Time())
         
 
 
-        # result2 = result.copy()
+        result2 = result.copy()
     
-        # #crate lidar line
-        # length = 600
-        # angles = []
-        # for i in range(-90,90,1):
-        #     angles.append(i)
-        # # print(angles)
+        #crate lidar line
+        length = 600
+        angles = []
+        for i in range(-90,90,1):
+            angles.append(i)
+        # print(angles)
 
-        # # Draw lines with different angles
-        # for angle in angles:
-        #     radians = angle * np.pi / 180
-        #     x2 = int(length * np.cos(radians))
-        #     y2 = int(length * np.sin(radians))
-        #     result2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
-        # # result2 = cv2.line(result2, (0,700), (800,0), (0,0,0), 1)
+        # Draw lines with different angles
+        for angle in angles:
+            radians = angle * np.pi / 180
+            x2 = int(length * np.cos(radians))
+            y2 = int(length * np.sin(radians))
+            result2=cv2.line(result2, (0, 225), (x2, 225+y2), (0, 0, 0), 1)
+        # result2 = cv2.line(result2, (0,700), (800,0), (0,0,0), 1)
 
-        # result = abs(result-result2)
+        result = abs(result-result2)
 
         # ## for ball detection
         # # img = np.zeros((self.mynode.outputRes[1]+200, self.mynode.outputRes[0]), 3), dtype = np.uint8)
         # # img[25,25] = [255 255 255]
 
+        img_array = np.array(result)
+
+        # Create boolean mask of white pixels
+        white_mask = np.all(img_array == [255, 255, 255], axis=-1)
+
+        # Find indices of True values in mask
+        white_indices = np.where(white_mask)
+
+        print(len(white_indices[0]))
+
+        # white = []
+
+        # for i in range(len(white_indices[0])):
+        #     if white_indices[0][i+1] - white_indices[0][i] == 1:
+        #         white.append(white_indices[0][i])
+        #     else:
+        #         print(white)
+        #         break
+
 
 
         self.publisher_.publish(self.br.cv2_to_imgmsg(result, encoding='rgb8'))
+
+
+
+
+
+
+
+
+
         # self.publisher_.publish(self.br.cv2_to_imgmsg(self.current_frame, encoding='rgb8'))
 
         # print(1/(time.time() - self.seconds))

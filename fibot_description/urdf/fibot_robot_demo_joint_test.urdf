@@ -12,7 +12,7 @@
       </material>
     </visual>
     <inertial>
-      <mass value="1" />
+      <mass value="5" />
       <inertia ixx="0.01" ixy="0.0" ixz="0" 
       iyy="0.01" iyz="0" izz="0.01" />
     </inertial>
@@ -131,7 +131,7 @@
 
   <link name="yaw_camera">
     <inertial>
-            <mass value="0.1" />
+            <mass value="1.0" />
             <inertia ixx="0.01" ixy="0.0" ixz="0" 
             iyy="0.01" iyz="0" izz="0.01" />
     </inertial>
@@ -157,7 +157,7 @@
   <!-- <joint name="yaw_camera_joint" type="continuous"> -->
     <!-- <axis xyz="0 0 1"/> -->
     <axis xyz="0.0 0.0 1.0"/>
-    <limit effort="100.0" lower="-3.14" upper="3.14" velocity="0.5"/>
+    <limit effort="10000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
     <origin xyz="0.35 0.0 0.50" rpy="0.0 0.0 0.0"/>
     <parent link="base"/>
     <child link="yaw_camera"/>
@@ -170,8 +170,9 @@
   <joint name="camera_joint_fixed" type="fixed">
     <!-- y-axis -->
     <axis xyz="0.0 1.0 0.0"/> 
-    <limit effort="100.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <!-- <limit effort="100.0" lower="-1.57" upper="1.57" velocity="0.5"/> -->
     <origin xyz="0.0 0.0 0.0" rpy="0 0.0 0"/>
+    <limit effort="100000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
     <!-- <origin xyz="0.0 0.0 0.0" rpy="3.14 2.61799 3.14"/> -->
     <parent link="yaw_camera"/>
     <child link="camera_link_fixed"/>
@@ -179,7 +180,7 @@
 
   <link name="camera_link_fixed">
     <inertial>
-            <mass value="0.1" />
+            <mass value="1.0" />
             <inertia ixx="0.01" ixy="0.0" ixz="0" 
             iyy="0.01" iyz="0" izz="0.01" />
     </inertial>
@@ -206,7 +207,7 @@
   
   <link name="camera">
     <inertial>
-            <mass value="0.1" />
+            <mass value="1.0" />
             <inertia ixx="0.01" ixy="0.0" ixz="0" 
             iyy="0.01" iyz="0" izz="0.01" />
     </inertial>
@@ -222,12 +223,12 @@
       </material>
     </visual>
 
-    <!-- <collision>
+    <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
           <box size="0.1 0.1 0.05"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
 
   <!-- <joint name="camera_joint" type="fixed">
@@ -240,7 +241,7 @@
   <joint name="camera_joint" type="revolute">
     <!-- y-axis -->
     <axis xyz="0.0 1.0 0.0"/> 
-    <limit effort="100.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <limit effort="10000.0" lower="-1.57" upper="1.57" velocity="0.1"/>
     <origin xyz="0.0 0.0 0.13" rpy="0.0 0.0 0.0"/>
     <!-- <origin xyz="0.0 0.0 0.0" rpy="3.14 2.61799 3.14"/> -->
     <parent link="camera_link_fixed"/>
@@ -384,7 +385,7 @@
 <!-- CAMERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -->
   <gazebo reference="camera">
     <sensor type="camera" name="camera1">
-      <update_rate>30.0</update_rate>
+      <update_rate>60.0</update_rate>
       <camera name="head">
         <horizontal_fov>1.22906</horizontal_fov>
         <image>
@@ -399,12 +400,12 @@
       </camera>
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
-        <updateRate>30.0</updateRate>
+        <updateRate>60.0</updateRate>
         <cameraName>/camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>camera</frameName>
-        <!-- <hackBaseline>0.07</hackBaseline> -->
+        <hackBaseline>0.07</hackBaseline>
       </plugin>
     </sensor>
     <material>Gazebo/Blue</material>
