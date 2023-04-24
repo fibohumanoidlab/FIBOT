@@ -13,9 +13,9 @@
   <xacro:property name="right_hip_length" value="0.048"/>
   <xacro:property name="right_hip_height" value="0.002"/>
 
-  <xacro:property name="foot_width" value="0.09"/>
-  <xacro:property name="foot_length" value="0.165"/>
-  <xacro:property name="foot_height" value="0.027"/>
+  <xacro:property name="foot_width" value="0.027"/>
+  <xacro:property name="foot_length" value="0.09"/>
+  <xacro:property name="foot_height" value="0.165"/>
 
   <xacro:property name="upper_foot_width" value="0.026"/>
   <xacro:property name="upper_foot_length" value="0.054"/>
@@ -29,17 +29,23 @@
   <xacro:property name="upper_leg_length" value="0.03"/>
   <xacro:property name="upper_leg_height" value="0.1553"/>
 
-  <xacro:property name="lower_leg_width" value="0.054"/>
-  <xacro:property name="lower_leg_length" value="0.03"/>
+  <xacro:property name="lower_leg_width" value="0.03"/>
+  <xacro:property name="lower_leg_length" value="0.054"/>
   <xacro:property name="lower_leg_height" value="0.16039"/>
 
   <xacro:property name="ankel_width" value="0.048"/>
   <xacro:property name="ankel_length" value="0.0922"/>
   <xacro:property name="ankel_height" value="0.06"/>
 
-  <xacro:property name="foot_width" value="0.09"/>
-  <xacro:property name="foot_length" value="0.165"/>
-  <xacro:property name="foot_height" value="0.027"/>
+  <xacro:property name="dynamixel_xm540_effort" value="10"/>
+  <xacro:property name="dynamixel_xm540_velocity" value="3.1415"/>
+  <xacro:property name="dynamixel_xm540_lower_limit" value="-3.14"/>
+  <xacro:property name="dynamixel_xm540_upper_limit" value="3.14"/>
+
+  <xacro:property name="dynamixel_xm430_effort" value="4.1"/>
+  <xacro:property name="dynamixel_xm430_velocity" value="4.82"/>
+  <xacro:property name="dynamixel_xm430_lower_limit" value="-3.14"/>
+  <xacro:property name="dynamixel_xm430_upper_limit" value="3.14"/>
 
   <xacro:property name="pi" value="3.1415"/>
 <!-- ###########################################################set up property #################################################################-->
@@ -81,15 +87,23 @@
     </inertial>
   </xacro:macro>
 <!-- add foot_print -->
-  <!-- <link name="foot_print">
+  <link name="base_footprint">
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="0 0 0"/>
       </geometry>
     </visual>
-  </link> -->
+  </link>
+  <joint name="base_footprint_to_base_link" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+      <origin xyz="0 0 0" />
+  </joint>
 <!-- add foot_print -->
+
+  <!-- ################################################################## base link ########################################################-->
+
   <link name="base_link">
     <visual>
       <origin xyz="0 0 0"/>
@@ -108,14 +122,14 @@
 
   <!-- ############################################################## macro robot's hip ####################################################-->
 
-  <xacro:macro name="hip" params='prefix reflect member parent z_origin'>
+  <xacro:macro name="hip" params='prefix reflect member parent joint_type joint_rpy joint_xyz link_rpy'>
     <link name="${prefix}_${member}_link">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz= "0 0 0" rpy="${link_rpy}"/>
         <geometry>
           <box size="${right_hip_width} ${right_hip_length} ${right_hip_height}"/>
         </geometry>
-        <material name="black"/>
+        <material name="violet"/>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -125,27 +139,36 @@
       </collision>
     </link>
 
-    <joint name="${parent}_to_${prefix}_${member}_link" type="continuous">
-      <axis xyz="0 1 0" rpy="0 0 0"/>
+    <joint name="${parent}_to_${prefix}_${member}_link" type="${joint_type}">
+      <axis xyz="0 0 1" />
+      <limit lower="${dynamixel_xm540_lower_limit}" upper="${dynamixel_xm430_upper_limit}" 
+              effort="${dynamixel_xm540_effort}" velocity="${dynamixel_xm540_velocity}"/>
       <parent link="${parent}"/>
-      <child link="${prefix}_${member}_link"/>
-      <origin xyz="${0.054*reflect} 0 ${z_origin}" rpy="0 0 0"/>
+      <child link="${prefix}_${member}_link"/>  
+      <origin xyz="${joint_xyz}" rpy="${joint_rpy}"/>
     </joint>
   </xacro:macro>
-  <xacro:hip prefix="right" reflect="1" member="hip" parent="base_link" z_origin="${-(base_height+right_hip_height)/2}"/>
-  <xacro:hip prefix="left" reflect="-1" member="hip" parent="base_link" z_origin="${-(base_height+right_hip_height)/2}"/>
-
-  <xacro:hip prefix="right" reflect="0" member="upper_foot" parent="right_ankel_link" z_origin="${-ankel_height/2}"/>
-  <xacro:hip prefix="left" reflect="0" member="upper_foot" parent="left_ankel_link" z_origin="${-ankel_height/2}"/>
+  <!-- right hip to base link -->
+  <xacro:hip prefix="right" reflect="1" member="hip" parent="base_link" joint_type="revolute" joint_rpy="0 0 ${pi}" 
+  joint_xyz="${0.054} 0 ${-(base_height+right_hip_height)/2}" link_rpy="0 0 0"/>
+  <!-- left hip to base link -->
+  <xacro:hip prefix="left" reflect="-1" member="hip" parent="base_link" joint_type="revolute" joint_rpy="0 0 ${pi}" 
+  joint_xyz="${-0.054} 0 ${-(base_height+right_hip_height)/2}" link_rpy="0 0 0"/>
+  <!-- right upper foot to right ankel -->
+  <xacro:hip prefix="right" reflect="0" member="upper_foot" parent="right_ankel_link" joint_type="revolute" joint_rpy="${pi/2} 0 0" 
+  joint_xyz="${(ankel_height)/2} 0 0" link_rpy="${pi/2} 0 ${pi/2}"/>
+  <!-- left upper foot to left ankel -->
+  <xacro:hip prefix="left" reflect="0" member="upper_foot" parent="left_ankel_link" joint_type="revolute" joint_rpy="${pi/2} 0 0" 
+  joint_xyz="${(ankel_height)/2} 0 0" link_rpy="${pi/2} 0 ${pi/2}"/>
 
 
   <!-- ############################################################## macro robot's bum ####################################################-->
-  <xacro:macro name="bum" params="prefix member parent z_origin">
+  <xacro:macro name="bum" params="prefix member parent joint_xyz joint_rpy size link_xyz">
     <link name="${prefix}_${member}_link">
       <visual>
-        <origin xyz="0 -0.0221 0"/>
+        <origin rpy="${-pi/2} 0 ${pi/2}" xyz="${link_xyz}" />
         <geometry>
-          <box size="${right_bum_width} ${right_bum_length} ${right_bum_height}"/>
+          <box size="${size}"/>
         </geometry>
         <material name="black"/>
       </visual>
@@ -156,28 +179,35 @@
       </collision>
     </link>
 
-    <joint name="${prefix}_${parent}_to_${prefix}_${member}" type="fixed">
+    <joint name="${prefix}_${parent}_to_${prefix}_${member}" type="revolute">
+      <axis xyz="0 0 1"/>
       <parent link="${prefix}_${parent}_link"/>
       <child link="${prefix}_${member}_link"/>
-      <origin xyz="0 0 ${z_origin}"/>
+      <limit lower="${dynamixel_xm540_lower_limit}" upper="${dynamixel_xm430_upper_limit}" 
+              effort="${dynamixel_xm540_effort}" velocity="${dynamixel_xm540_velocity}"/>
+      <origin xyz="${joint_xyz}" rpy="${joint_rpy}"/> 
     </joint>
       <!-- origin may been wong because 'z' may be not bum height divine by 2, it might increse in 'z' axis -->
   </xacro:macro>
   <!-- right hip link to right bum link-->
-  <xacro:bum prefix="right" member="bum" parent="hip" z_origin="${-right_bum_height/2}"/>   
+  <xacro:bum prefix="right" member="bum" parent="hip" joint_xyz="0 0 ${-right_bum_height/2}" 
+  joint_rpy="${pi/2} 0 0" size="${right_bum_width} ${right_bum_length} ${right_bum_height}" link_xyz="0 0 -0.0221"/>   
   <!-- left hip link to left bum link -->
-  <xacro:bum prefix="left" member="bum" parent="hip" z_origin="${-right_bum_height/2}"/>
+  <xacro:bum prefix="left" member="bum" parent="hip" joint_xyz="0 0 ${-right_bum_height/2}" 
+  joint_rpy="${pi/2} 0 0" size="${right_bum_width} ${right_bum_length} ${right_bum_height}" link_xyz="0 0 -0.0221"/>
   <!-- right ankel link to right lower leg-->
-  <xacro:bum prefix="right" member="ankel" parent="lower_leg" z_origin="${-lower_leg_height}"/>
+  <xacro:bum prefix="right" member="ankel" parent="lower_leg" joint_xyz="${lower_leg_height} 0 0" 
+  joint_rpy="0 0 0" size="${right_bum_length} ${right_bum_width} ${right_bum_height}" link_xyz="0 0.0221 0"/>
   <!-- left ankel link to left lower leg -->
-  <xacro:bum prefix="left" member="ankel" parent="lower_leg" z_origin="${-lower_leg_height}"/> 
+  <xacro:bum prefix="left" member="ankel" parent="lower_leg" joint_xyz="${lower_leg_height} 0 0" 
+  joint_rpy="0 0 0" size="${right_bum_length} ${right_bum_width} ${right_bum_height}" link_xyz="0 0.0221 0"/> 
   
 
   <!--########################################################## macro robot's upper leg #######################################################-->
   <xacro:macro name="upper_leg" params="prefix">
     <link name="${prefix}_upper_leg_link">
       <visual>
-        <origin xyz="0 0 ${-upper_leg_height/2}"/>
+        <origin xyz="${upper_leg_height/2} 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
         <geometry>
           <box size="${upper_leg_width} ${upper_leg_length} ${upper_leg_height}"/>
         </geometry>
@@ -190,10 +220,13 @@
       </collision>
     </link>
 
-    <joint name="${prefix}_bum_to_${prefix}_upper_leg" type="fixed">
+    <joint name="${prefix}_bum_to_${prefix}_upper_leg" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit lower="${dynamixel_xm540_lower_limit}" upper="${dynamixel_xm430_upper_limit}" 
+              effort="${dynamixel_xm540_effort}" velocity="${dynamixel_xm540_velocity}"/>
       <parent link="${prefix}_bum_link"/>
       <child link="${prefix}_upper_leg_link"/>
-      <origin xyz="0 0 0"/>
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
       <!-- origin must be the same with bum joint -->
     </joint>
 
@@ -206,7 +239,7 @@
   <xacro:macro name="lower_leg" params="prefix">
     <link name="${prefix}_lower_leg_link">
       <visual>
-        <origin xyz="0 0 ${-lower_leg_height/2}"/>
+        <origin xyz="${lower_leg_height/2} 0 0" rpy="0 ${-pi/2} 0"/>
         <geometry>
           <box size="${lower_leg_width} ${lower_leg_length} ${lower_leg_height}"/>
         </geometry>
@@ -219,10 +252,13 @@
       </collision>
     </link>
 
-  <joint name="${prefix}_upper_leg_to_${prefix}_lower_leg" type="fixed">
+  <joint name="${prefix}_upper_leg_to_${prefix}_lower_leg" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit lower="${dynamixel_xm540_lower_limit}" upper="${dynamixel_xm430_upper_limit}" 
+            effort="${dynamixel_xm540_effort}" velocity="${dynamixel_xm540_velocity}"/>
     <parent link="${prefix}_upper_leg_link"/>
     <child link="${prefix}_lower_leg_link"/>
-    <origin xyz="0 0 ${-upper_leg_height}"/>
+    <origin xyz="${upper_leg_height} 0 0" rpy="0 0 0"/>
   </joint>
   </xacro:macro>
   <xacro:lower_leg prefix="right"/>
@@ -249,11 +285,12 @@
     <joint name="${prefix}_upper_foot_to_${prefix}_foot" type="fixed">
       <parent link="${prefix}_upper_foot_link"/>
       <child link="${prefix}_foot_link"/>
-      <origin xyz="${0.018*reflect} -0.00989 0"/>
+      <!-- <origin xyz="0 ${0.018*reflect} -0.00989" rpy="${pi} ${pi/2} 0"/> -->
+      <origin xyz="0.029 ${0.018*reflect} 0" rpy="0 0 0"/>
     </joint>
   </xacro:macro>
-  <xacro:foot prefix="right" reflect="1"/>
-  <xacro:foot prefix="left" reflect="-1"/>
+  <xacro:foot prefix="right" reflect="-1"/>
+  <xacro:foot prefix="left" reflect="1"/>
 
 </robot>
 
