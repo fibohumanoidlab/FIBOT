@@ -1,4 +1,4 @@
-# FIBOT
+# FIBOT d
 """sudo apt install ros-<ros2-distro>-robot-localization"""
   https://navigation.ros.org/setup_guides/odom/setup_odom.html
   
