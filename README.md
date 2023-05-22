@@ -22,7 +22,7 @@ this document be a part of FRA506 humanoid. In this document including of introd
 This package use extends py_trees package with behaviours, idioms, a tree manager and command line tools that suited for ROS2 ecosystem.
 To enable the package, first, we must install following package.
   
-## Install pip install opencv-python
+## Install opencv
 ```
 pip3 install opencv-python
 ```
