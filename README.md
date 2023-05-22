@@ -116,7 +116,7 @@ Use this space to list resources you find helpful and would like to give credit 
 
 ## Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute]].
+This project exists thanks to all the people who contribute. 
 <a href="https://github.com/fibohumanoidlab/FIBOT_Github/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=fibohumanoidlab/FIBOT_Github" />
 </a>
