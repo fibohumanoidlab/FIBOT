@@ -114,6 +114,11 @@ Use this space to list resources you find helpful and would like to give credit 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/fibohumanoidlab/FIBOT_Github/graphs/contributors"></a>
+
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome.<br />
