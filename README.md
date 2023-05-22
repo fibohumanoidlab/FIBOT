@@ -33,12 +33,13 @@ Use the `BLANK_README.md` to get started.
   
 ### Table of Contents
 
-1. [Built With](#Built With)
+1. [Built With](#Built-With)
 2. [My second title](#my-second-title)
 ## My first title
 Some text.
 ## My second title
 
+  <a name="Built-With"></a>
   ### Built With
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
