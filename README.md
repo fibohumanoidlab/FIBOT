@@ -7,12 +7,11 @@
   sudo apt install ros-foxy-ros2-control ros-foxy-ros2-controllers ros-foxy-gazebo-ros2-control
 
 # About this package
-
-* **Author** : Patcharapon Thaweepanyayos && 
-* **Package** : robot_decision
+  
+* **Package** : robot_locallization
 * **detail** : Ubuntu 20.04 Lts, ROS2 (Foxy)
 * **Provider** : FIBO Humanoid Lab, KMUTT, Thailand
-* **Contact** : 
+
   
 # Document
 this document be a part of FRA506 humanoid. In this document including of introduction content conclusion and suggestion
@@ -45,7 +44,7 @@ ros2 launch robot_decision decision.launch.py
   <!-- CONTACT -->
 ## Contact
 
-Patcharapon Thaweepanyayos - https://www.facebook.com/profile.php?id=100007441359573e - email@example.com
+Patcharapon Thaweepanyayos - https://www.facebook.com/profile.php?id=100007441359573e - patcharaponthaweepanyayos@gmail.com
 
 Project Link: [https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization](https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization)
 
@@ -57,7 +56,7 @@ Project Link: [https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization
 
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
-* [Choose an Open Source License](https://choosealicense.com)
+* [navigation2](https://navigation.ros.org/getting_started/index.html#getting-started)
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
 * [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
 * [Malven's Grid Cheatsheet](https://grid.malven.co/)
