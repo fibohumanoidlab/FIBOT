@@ -27,7 +27,7 @@ Use the `BLANK_README.md` to get started.
   
 # System requirements
   
-* Ubuntu 20.04 Lts
+* Ubuntu 20.04 
 * ROS2 (Foxy)
   
 ### Table of Contents
