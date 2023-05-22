@@ -25,11 +25,10 @@ Use the `BLANK_README.md` to get started.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
   
-# About this package
+# System requirements
   
-* **Package** : robot_locallization
-* **detail** : Ubuntu 20.04 Lts, ROS2 (Foxy)
-* **Provider** : FIBO Humanoid Lab, KMUTT, Thailand
+* Ubuntu 20.04 Lts
+* ROS2 (Foxy)
   
 ### Table of Contents
 
