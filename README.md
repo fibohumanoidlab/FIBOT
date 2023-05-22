@@ -7,8 +7,23 @@ Repository นี้คือ implementation ของระบบ localization 
 โดยแนวคิดการออกแบบ
 
 
+เริ่มต้นเเปลงภาพที่ได้จากกล้อง web camera ซึ่งภาพที่ได้มาเป็น perspective ให้เป็นภาพ Top view โดยใช้ IPM  
 
 
+
+<!-- ROADMAP -->
+## Roadmap
+- [x] Setup gazebo environment
+- [x] Camera to topview
+- [x] topview to laserscan msg
+- [x] Localize with AMCL(Nav2) in simulation
+  - [x] by only camera to laserscan
+  - [ ] by sensor fusion (IMU + odom + camera to laserscan)
+- [ ] camera move in pitch and yaw (simulation)
+
+See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
   
