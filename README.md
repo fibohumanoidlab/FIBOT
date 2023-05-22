@@ -6,12 +6,49 @@
   
   sudo apt install ros-foxy-ros2-control ros-foxy-ros2-controllers ros-foxy-gazebo-ros2-control
 
+  <!-- ABOUT THE PROJECT -->
+## About The Project
+
+[![Product Name Screen Shot][product-screenshot]](https://example.m)
+
+There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+
+Here's why:
+* Your time should be focused on creating something amazing. A project that solves a problem and helps others
+* You shouldn't be doing the same tasks over and over like creating a README from scratch
+* You should implement DRY principles to the rest of your life :smile:
+
+Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
+
+Use the `BLANK_README.md` to get started.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+  
 # About this package
   
 * **Package** : robot_locallization
 * **detail** : Ubuntu 20.04 Lts, ROS2 (Foxy)
 * **Provider** : FIBO Humanoid Lab, KMUTT, Thailand
+  
+### Table of Contents
 
+1. [Built With](#Built With)
+2. [My second title](#my-second-title)
+## My first title
+Some text.
+## My second title
+
+  ### Built With
+
+This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+
+* [![docs][docs.ros]][https://docs.ros.org/en/foxy/index.html]
+* [![React][React.js]][React-url]
+* [![Vue][Vue.js]][Vue-url]
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
   
 # Document
 this document be a part of FRA506 humanoid. In this document including of introduction content conclusion and suggestion
