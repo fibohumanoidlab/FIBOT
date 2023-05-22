@@ -57,7 +57,7 @@ Project Link: [https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
 * [navigation2](https://navigation.ros.org/getting_started/index.html#getting-started)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
+* [ros2 control example](https://articulatedrobotics.xyz/mobile-robot-12-ros2-control/)
 * [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
 * [Malven's Grid Cheatsheet](https://grid.malven.co/)
 * [Img Shields](https://shields.io)
