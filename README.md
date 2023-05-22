@@ -14,12 +14,14 @@ Repository นี้คือ implementation ของระบบ localization 
 <!-- ROADMAP -->
 ## Roadmap
 - [x] Setup gazebo environment
-- [x] Camera to topview
-- [x] topview to laserscan msg
+- [x] Camera to topview 
+- [x] topview to laserscan msg in simulation
+- [x] camera move in pitch and yaw (simulation) # note not good in simulation!!!
 - [x] Localize with AMCL(Nav2) in simulation
   - [x] by only camera to laserscan
-  - [ ] by sensor fusion (IMU + odom + camera to laserscan)
-- [ ] camera move in pitch and yaw (simulation)
+  - [ ] by sensor fusion (IMU + odom + camera to laserscan) 
+- [ ] topview to laserscan msg in real world (waiting segmentation node from AI team)
+- [ ] implement Localization in real world
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
