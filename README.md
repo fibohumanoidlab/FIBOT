@@ -4,9 +4,12 @@ Repository นี้คือ implementation ของระบบ localization 
 
 ![test](image/localization_sim.png)
 
-โดยแนวคิดการออกแบบ
+โดยแนวคิดการออกแบบในตอนนี้จะทำเป็น simulation เเละ คิดว่าภาพที่ได้จากกล้องผ่านการ segmentation คือจะทำสนามฟุตบอลจำลองใน gazebo ให้บริเวณเส้นหญ้าเป็นพื้นสีดำเเละ เส้นสนามสีขาว
+ขั้นตอนในการทำ
+1.เเปลงภาพที่ได้จากกล้อง web camera ซึ่งภาพที่ได้มาเป็น perspective ให้เป็นภาพ Top view โดยใช้ IPM
+2.หา pixel สีขาว เเล้วเเปลงเป็น laserscan msg
+3.นำlaserscan msgมาใช้ร่วมกับ amcl ของ navigation2
 
-เริ่มต้นเเปลงภาพที่ได้จากกล้อง web camera ซึ่งภาพที่ได้มาเป็น perspective ให้เป็นภาพ Top view โดยใช้ IPM  
 
 <!-- ROADMAP -->
 # Roadmap
@@ -72,6 +75,7 @@ sudo apt install ros-foxy-navigation2
 ```
 sudo apt install ros-foxy-ros2-control ros-foxy-ros2-controllers ros-foxy-gazebo-ros2-control
 ```
+<a name=Quickstart"></a>
 # Quickstart
 In this package have launch file that launch all node include of Ball_node Root_node and robot_id node
 ```
@@ -85,7 +89,7 @@ ros2 launch robot_decision decision.launch.py
 <a name=Contact"></a>
 ## Contact
 
-Patcharapon Thaweepanyayos - https://www.facebook.com/profile.php?id=100007441359573e - patcharaponthaweepanyayos@gmail.com
+Patcharapon Thaweepanyayos - patcharaponthaweepanyayos@gmail.com
 
 Project Link: [https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization](https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization)
 
@@ -109,6 +113,12 @@ Use this space to list resources you find helpful and would like to give credit 
 * [React Icons](https://react-icons.github.io/react-icons/search)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome.<br />
+Feel free to check [issues page](https://github.com/fibohumanoidlab/FIBOT_Github/issues) if you want to contribute.<br />
+
 
 
 ### Note for Sua
