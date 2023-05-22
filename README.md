@@ -6,13 +6,10 @@ Repository นี้คือ implementation ของระบบ localization 
 
 โดยแนวคิดการออกแบบ
 
-
 เริ่มต้นเเปลงภาพที่ได้จากกล้อง web camera ซึ่งภาพที่ได้มาเป็น perspective ให้เป็นภาพ Top view โดยใช้ IPM  
 
-
-
 <!-- ROADMAP -->
-## Roadmap
+# Roadmap
 - [x] Setup gazebo environment
 - [x] Camera to topview 
 - [x] topview to laserscan msg in simulation
@@ -23,26 +20,26 @@ Repository นี้คือ implementation ของระบบ localization 
 - [ ] topview to laserscan msg in real world (waiting segmentation node from AI team)
 - [ ] implement Localization in real world
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+# Table of Contents
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+1. [System requirements](#System-requirements)
+2. [Built With](#Built-With)
+3. [Installation](#Installation)
+4. [Contact](#Contact)
+5. [Acknowledgments](#Acknowledgments)
 
-
-  
+<a name="System-requirements"></a>
 # System requirements
   
 * Ubuntu 20.04 
 * ROS2 (Foxy)
   
-### Table of Contents
-
-1. [Built With](#Built-With)
-2. [Installation](#Installation)
 
 
 
-  <a name="Built-With"></a>
-  ### Built With
+
+<a name="Built-With"></a>
+# Built With
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
@@ -56,6 +53,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 # Document
 this document be a part of FRA506 humanoid. In this document including of introduction content conclusion and suggestion
 
+<a name="Installation"></a>
 # Installation
 
 This package use extends py_trees package with behaviours, idioms, a tree manager and command line tools that suited for ROS2 ecosystem.
@@ -82,6 +80,8 @@ ros2 launch robot_decision decision.launch.py
   
   
   <!-- CONTACT -->
+  
+<a name=Contact"></a>
 ## Contact
 
 Patcharapon Thaweepanyayos - https://www.facebook.com/profile.php?id=100007441359573e - patcharaponthaweepanyayos@gmail.com
@@ -92,6 +92,8 @@ Project Link: [https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization
   
   
   <!-- ACKNOWLEDGMENTS -->
+                                       
+<a name="Acknowledgments"></a>
 ## Acknowledgments
 
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
