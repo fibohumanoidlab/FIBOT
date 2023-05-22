@@ -34,10 +34,9 @@ Use the `BLANK_README.md` to get started.
 ### Table of Contents
 
 1. [Built With](#Built-With)
-2. [My second title](#my-second-title)
-## My first title
-Some text.
-## My second title
+2. [Installation](#Installation)
+
+
 
   <a name="Built-With"></a>
   ### Built With
