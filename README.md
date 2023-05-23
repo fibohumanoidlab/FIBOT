@@ -38,10 +38,6 @@ Repository นี้คือ implementation ของระบบ localization 
 * Ubuntu 20.04 
 * ROS2 (Foxy)
   
-
-
-
-
 <!-- <a name="Built-With"></a>
 # Built With
 
@@ -50,9 +46,6 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * [![docs][docs.ros]][https://docs.ros.org/en/foxy/index.html]
 * [![React][React.js]][React-url]
 * [![Vue][Vue.js]][Vue-url] -->
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
   
 # Document
 this document be a part of FRA506 humanoid. In this document including of introduction content conclusion and suggestion
@@ -71,18 +64,30 @@ pip3 install opencv-python
 ```
 sudo apt install ros-foxy-navigation2
 ```
-## install ros2-control
+<!-- ## install ros2-control
 ```
 sudo apt install ros-foxy-ros2-control ros-foxy-ros2-controllers ros-foxy-gazebo-ros2-control
-```
+``` -->
+
 <a name="Quickstart"></a>
 # Quickstart
                    
-In this package have launch file that launch all node include of Ball_node Root_node and robot_id node
+Spawn robot in gazebo.
                
 ```                
-ros2 launch robot_decision decision.launch.py                 
+ros2 launch fibot_gazebo spawn2.launch.py               
 ```
+Start camera to laserscan node.
+
+```
+ros2 run localization_pkg py_node_champ.py 
+```
+
+Start nav2 to use AMCL for localization.
+```
+ros2 launch localization_pkg nav2.launch.py
+```
+
                    
 <a name="Suggestion"></a>
 # Suggestion
@@ -94,8 +99,8 @@ test 1 2 3
 <a name="Contact"></a>
 # Contact
 
-Patcharapon Thaweepanyayos - patcharaponthaweepanyayos@gmail.com
-
+### Patcharapon Thaweepanyayos - patcharaponthaweepanyayos@gmail.com
+### Piamsuk Noipong - piamsuk.robot@mail.kmutt.ac.th
 Project Link: [https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization](https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization)
 
 
