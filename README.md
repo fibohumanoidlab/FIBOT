@@ -49,20 +49,17 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * [![React][React.js]][React-url]
 * [![Vue][Vue.js]][Vue-url] -->
   
-# Document
-this document be a part of FRA506 humanoid. In this document including of introduction content conclusion and suggestion
+<!-- # Document
+this document be a part of FRA506 humanoid. In this document including of introduction content conclusion and suggestion -->
 
 <a name="Installation"></a>
 # Installation
-
-This package use extends py_trees package with behaviours, idioms, a tree manager and command line tools that suited for ROS2 ecosystem.
-To enable the package, first, we must install following package.
   
-## Install opencv
+### 1. Install opencv
 ```
 pip3 install opencv-python
 ```
-## Install navigation2
+### 2. Install navigation2
 ```
 sudo apt install ros-foxy-navigation2
 ```
@@ -74,26 +71,26 @@ sudo apt install ros-foxy-ros2-control ros-foxy-ros2-controllers ros-foxy-gazebo
 <a name="Quickstart"></a>
 # Quickstart
                    
-Spawn robot in gazebo.
+### 1. Spawn robot in gazebo.
                
 ```                
 ros2 launch fibot_gazebo spawn2.launch.py               
 ```
-Start camera to laserscan node.
+### 2. Start camera to laserscan node.
 
 ```
 ros2 run localization_pkg py_node_champ.py 
 ```
 
-Start nav2 to use AMCL for localization.
+### 3. Start nav2 to use AMCL for localization.
 ```
 ros2 launch localization_pkg nav2.launch.py
 ```
-Start teleop node
+### 4. Start teleop node
 ```
 ros2 run tele
 ```
-then move the robot by teleop, you will see like below.
+### 5. then move the robot by teleop, you will see like below.
 
 ![](image/amcl.gif)
                    
@@ -132,7 +129,7 @@ Use this space to list resources you find helpful and would like to give credit 
 
 
 
-## Code Contributors
+<!-- ## Code Contributors
 
 This project exists thanks to all the people who contribute. 
 <a href="https://github.com/fibohumanoidlab/FIBOT_Github/graphs/contributors">
@@ -145,7 +142,7 @@ This project exists thanks to all the people who contribute.
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome.<br />
-Feel free to check [issues page](https://github.com/fibohumanoidlab/FIBOT_Github/issues) if you want to contribute.<br />
+Feel free to check [issues page](https://github.com/fibohumanoidlab/FIBOT_Github/issues) if you want to contribute.<br /> -->
 
 
 
