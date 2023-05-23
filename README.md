@@ -1,5 +1,7 @@
 <h1 align="center">Localization </h1>
 
+เขียนอธิบายและแนะนำเพิ่ม เสร็จ
+
 Repository นี้คือ implementation ของระบบ localization สำหรับ Humanoid robot ด้วยข้อมูลจากกล้อง(ใช้ Lidar ไม่ได้) และเซนเซอร์ต่าง ๆ เช่น IMU รวมถึงข้อมูลจาก odom estimation เพื่อให้หุ่นยนต์รับรู้ข้อมูลตำแหน่งและทิศทางของตัวเอง และสามารถวางแผนกลยุทธ์การบุกและการรับของทีมได้
 
 ![test](image/localization_sim.png)
