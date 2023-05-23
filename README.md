@@ -26,9 +26,9 @@ Repository นี้คือ implementation ของระบบ localization 
 # Table of Contents
 
 1. [System requirements](#System-requirements)
-2. [Built With](#Built-With)
-3. [Installation](#Installation)
-4. [Quickstart](#Quickstart)
+2. [Installation](#Installation)
+3. [Quickstart](#Quickstart)
+4. [Suggestion](#Suggestion)
 5. [Contact](#Contact)
 6. [Acknowledgments](#Acknowledgments)
 
@@ -42,14 +42,14 @@ Repository นี้คือ implementation ของระบบ localization 
 
 
 
-<a name="Built-With"></a>
+<!-- <a name="Built-With"></a>
 # Built With
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
 * [![docs][docs.ros]][https://docs.ros.org/en/foxy/index.html]
 * [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
+* [![Vue][Vue.js]][Vue-url] -->
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -98,7 +98,7 @@ Patcharapon Thaweepanyayos - patcharaponthaweepanyayos@gmail.com
 
 Project Link: [https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization](https://github.com/fibohumanoidlab/FIBOT_Github/tree/localization)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
   
   
 <!-- ACKNOWLEDGMENTS -->
@@ -117,7 +117,7 @@ Use this space to list resources you find helpful and would like to give credit 
 * [Font Awesome](https://fontawesome.com)
 * [React Icons](https://react-icons.github.io/react-icons/search)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 ## Code Contributors
 
