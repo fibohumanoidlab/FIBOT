@@ -87,7 +87,13 @@ Start nav2 to use AMCL for localization.
 ```
 ros2 launch localization_pkg nav2.launch.py
 ```
+Start teleop node
+```
+ros2 run tele
+```
+then move the robot by teleop, you will see like below.
 
+![](image/amcl.gif)
                    
 <a name="Suggestion"></a>
 # Suggestion
