@@ -18,7 +18,7 @@ Repository นี้คือ implementation ของระบบ localization 
 - [x] topview to laserscan msg in simulation
 - [x] camera move in pitch and yaw (simulation) # note not good in simulation!!!
 - [ ] Localize with AMCL(Nav2) in simulation
-  - [ ] 90% - by only camera to laserscan [ระบุตำแหน่งได้แล้ว แต่เฟรม odom มีปัญหา ถ้าsimจะเห็นว่าเฟรมค่อยๆจางลงเป็นสีเทาซึ่งมันไม่ควรจะเป็นแบบนั้น]
+  - [ ] [in progress 90%] by only camera to laserscan [ระบุตำแหน่งได้แล้ว แต่เฟรม odom มีปัญหา ถ้าsimจะเห็นว่าเฟรมค่อยๆจางลงเป็นสีเทาซึ่งมันไม่ควรจะเป็นแบบนั้น]
   - [ ] by sensor fusion (IMU + odom + camera to laserscan) 
 - [ ] topview to laserscan msg in real world (waiting segmentation node from AI team)
 - [ ] implement Localization in real world
