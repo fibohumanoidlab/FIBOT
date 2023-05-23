@@ -1,16 +1,15 @@
 <h1 align="center">Localization </h1>
 
-เขียนอธิบายและแนะนำเพิ่ม เสร็จ
-
 Repository นี้คือ implementation ของระบบ localization สำหรับ Humanoid robot ด้วยข้อมูลจากกล้อง(ใช้ Lidar ไม่ได้) และเซนเซอร์ต่าง ๆ เช่น IMU รวมถึงข้อมูลจาก odom estimation เพื่อให้หุ่นยนต์รับรู้ข้อมูลตำแหน่งและทิศทางของตัวเอง และสามารถวางแผนกลยุทธ์การบุกและการรับของทีมได้
 
 ![test](image/localization_sim.png)
 
-โดยแนวคิดการออกแบบในตอนนี้จะทำเป็น simulation เเละ คิดว่าภาพที่ได้จากกล้องผ่านการ segmentation คือจะทำสนามฟุตบอลจำลองใน gazebo ให้บริเวณเส้นหญ้าเป็นพื้นสีดำเเละ เส้นสนามสีขาว
+โดยแนวคิดการออกแบบในตอนนี้จะทำเป็น simulation เเละ คิดว่าภาพที่ได้จากกล้องผ่านการ segmentation เพื่อหาตำแหน่งเส้นสีขาวบนรูป โดยทำสนามฟุตบอลจำลองใน gazebo ให้บริเวณหญ้าเป็นพื้นสีดำเเละ เส้นสนามเป็นสีขาว
+
 ขั้นตอนในการทำ
-1.เเปลงภาพที่ได้จากกล้อง web camera ซึ่งภาพที่ได้มาเป็น perspective ให้เป็นภาพ Top view โดยใช้ IPM
-2.หา pixel สีขาว เเล้วเเปลงเป็น laserscan msg
-3.นำlaserscan msgมาใช้ร่วมกับ amcl ของ navigation2
+1. เเปลงภาพที่ได้จากกล้อง web camera ซึ่งภาพที่ได้มาเป็น perspective ให้เป็นภาพ Top view โดยใช้ IPM
+2. หา pixel เฉพาะสีขาว(จากรูปที่กล้องมองเห็นหรือรูปที่ผ่านการ segment เพื่อแยกเส้นสนามสีขาวออกจากสนามสีเขียว) เเล้วเเปลงเป็น laserscan msg
+3. นำlaserscan msg มาใช้ร่วมกับ amcl ของ navigation2
 
 
 <!-- ROADMAP -->
@@ -93,7 +92,10 @@ ros2 run tele
 ### 5. then move the robot by teleop, you will see like below.
 
 ![](image/amcl.gif)
-                   
+              
+# About camera to topview(IPM)
+source: https://github.com/ika-rwth-aachen/Cam2BEV/tree/master/preprocessing/ipm
+
 <a name="Suggestion"></a>
 # Suggestion
 
