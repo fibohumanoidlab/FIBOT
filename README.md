@@ -34,11 +34,16 @@ git clone https://github.com/splintered-reality/py_trees_ros_viewer.git
 ```
 For more information about installing, can check on this git [ splintered-reality /py_trees_ros ](https://github.com/splintered-reality/py_trees_ros).
 
+## About the project
+In this project, we create a humanoid soccer robot decision system using a behavior tree algorithm. Moreover, we create the event node to simulate the event such as the position of the ball relates to the robot and the id of the robot to determine which robot is nearest to the ball. Then, we create the behavior node and tree to integrate the system. 
+
+
 # Quickstart
-This package have a launch file that launches all node include of Ball_node Root_node and robot_id node
+This package has a launch file that launches all node include of Ball_node Root_node and robot_id node
 ```
 ros2 launch robot_decision node.launch.py
 ```
+![messageImage_1684918306071](https://github.com/fibohumanoidlab/FIBOT_Github/assets/125351253/1c090f12-b158-43fa-b54f-9cd8d91792b1)
 The ball node is a node that provides a topic when the robot detects the ball.
 The root node is a node that creates the behavior tree as it was designed.
 robot_id_node is a node that provide a topic robot id to simulate which robot is stay nearest to the ball.
