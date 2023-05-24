@@ -6,13 +6,13 @@
 * **Provider** : FIBO Humanoid Lab, KMUTT, Thailand
 * **Contact** : russapat@gmail.com
 
-# Document
-this document be a part of FRA506 humanoid. In this document including of introduction content conclusion and suggestion
+# Introduction
+The decision of the player is an important part of the match that can lead to victory. A good decision can measure the intelligence of the robot. In 2022, our team uses a state machine to create an algorithm. However, a state machine has some disadvantages compared to a behavior tree. For example, the behavior tree can be coded in a node and connected with other nodes like a tree. it’s able to overwrite the behavior node or recreate the tree with the same behavior node. Moreover, our system is developed using ROS2 which has a behavior tree extension.
 
 # Installation
+This package use extends the py_trees package with behaviors, idioms, a tree manager, and command line tools that are suited for the ROS2 ecosystem.
+To enable the package, first, we must install the following package.
 
-This package use extends py_trees package with behaviours, idioms, a tree manager and command line tools that suited for ROS2 ecosystem.
-To enable the package, first, we must install following package.
 ## Install py_trees_ros package
 ```
 git clone https://github.com/splintered-reality/py_trees_ros.git
@@ -25,17 +25,17 @@ git clone https://github.com/splintered-reality/py_trees_ros_tutorials.git
 ```
 git clone https://github.com/splintered-reality/py_trees_ros_interfaces.git
 ```
-Now, we can learn py_tree tutorials from this web site [py_tree_tutorial](https://py-trees-ros-tutorials.readthedocs.io/en/release-2.1.x/index.html).
+Now, we can learn py_tree tutorials from this website [py_tree_tutorial](https://py-trees-ros-tutorials.readthedocs.io/en/release-2.1.x/index.html).
 
 ## Optional
-if you want some visaulize, you can install py_trees_ros_viewer package
+if you want some visualize, you can install the py_trees_ros_viewer package
 ```
 git clone https://github.com/splintered-reality/py_trees_ros_viewer.git
 ```
-For more infomation about installing, can check on this git [ splintered-reality /py_trees_ros ](https://github.com/splintered-reality/py_trees_ros).
+For more information about installing, can check on this git [ splintered-reality /py_trees_ros ](https://github.com/splintered-reality/py_trees_ros).
 
 # Quickstart
-In this package have launch file that launch all node include of Ball_node Root_node and robot_id node
+This package have launch file that launch all node include of Ball_node Root_node and robot_id node
 ```
 ros2 launch robot_decision decision.launch.py
 ```
