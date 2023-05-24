@@ -28,20 +28,20 @@ git clone https://github.com/splintered-reality/py_trees_ros_interfaces.git
 Now, we can learn py_tree tutorials from this website [py_tree_tutorial](https://py-trees-ros-tutorials.readthedocs.io/en/release-2.1.x/index.html).
 
 ## Optional
-if you want some visualize, you can install the py_trees_ros_viewer package
+if you want some visualization, you can install the py_trees_ros_viewer package
 ```
 git clone https://github.com/splintered-reality/py_trees_ros_viewer.git
 ```
 For more information about installing, can check on this git [ splintered-reality /py_trees_ros ](https://github.com/splintered-reality/py_trees_ros).
 
 # Quickstart
-This package have launch file that launch all node include of Ball_node Root_node and robot_id node
+This package have a launch file that launches all node include of Ball_node Root_node and robot_id node
 ```
-ros2 launch robot_decision decision.launch.py
+ros2 launch robot_decision node.launch.py
 ```
-Ball node is a node that provide topic when robot detect the ball.
-Root node is a node that create the behavior tree as it was designed.
-robot_id_node is a node that provide topic robot id to simulate which robot is stay nearest the ball.
+The ball node is a node that provides a topic when the robot detects the ball.
+The root node is a node that creates the behavior tree as it was designed.
+robot_id_node is a node that provide a topic robot id to simulate which robot is stay nearest to the ball.
 Use this command line to visualize the result and the behavior.
 ```
 py-trees-tree-viewer
