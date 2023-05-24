@@ -3,18 +3,15 @@
 <package format="3">
   <name>robot_decision</name>
   <version>0.0.0</version>
-  <description>Humanoid Robot Soccer Decision</description>
-  <maintainer email="russapat@gmail.com">russapat</maintainer>
-  <license>Apache License 2.0</license>
+  <description>TODO: Package description</description>
+  <maintainer email="teeteethewacko@gmail.com">ty-humble</maintainer>
+  <license>TODO: License declaration</license>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
-  
   <exec_depend>ros2launch</exec_depend>
-
-  <!-- <depend>rosidl_default_generators</depend> -->
 
   <export>
     <build_type>ament_python</build_type>
