@@ -50,3 +50,4 @@ ros2 run obj_detect obj_det.py
 # Suggestion
 * change from yolov5 to yolov8
 * stream webcam via rtsp so camera can be call by multiple python script
+* **[Custom train yolov5s]** : https://github.com/nosegit/yolov5s-torso21.git
