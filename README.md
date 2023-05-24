@@ -39,7 +39,7 @@ In this project, we create a humanoid soccer robot decision system using a behav
 
 
 # Quickstart
-This package has a launch file that launches all node include of Ball_node Root_node and robot_id node
+This package has a launch file that launches all nodes include of Ball_node Root_node and robot_id node
 ```
 ros2 launch robot_decision node.launch.py
 ```
@@ -51,4 +51,6 @@ Use this command line to visualize the result and the behavior.
 ```
 py-trees-tree-viewer
 ```
+## Conclusion
+A behavior tree algorithm can use to create a robot decision system perfectly. However, with the behavior tree algorithm, we can create a more complex decision system. For example, we can add a behavior node that checks robot pos and will this pos determine that the robot will fall so, we can prevent. If the sensor sends the information that the robot is falling so, the decision system must stop all action and make the robot stand again. If the robot is going to kick the ball which way is the robot going to kick?
 
