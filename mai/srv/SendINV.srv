@@ -1,0 +1,8 @@
+float32 x
+float32 y
+float32 z
+float32[] hip_input
+float32[] foot_input
+bool isright
+---
+bool success

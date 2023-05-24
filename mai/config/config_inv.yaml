@@ -1,0 +1,43 @@
+head:
+  link1: 1
+  link2: 1
+  link3: 1
+  link4: 1
+  link5: 1
+  link6: 1
+
+arm:
+  right:
+    link1: 10
+    link2: 22
+    link3: 35
+    link4: 30
+    link5: 13
+    link6: 15
+    link7: 11
+    link8: 23
+    gamma2: -1
+    gamma3: 1
+    target: 0.01
+  left:
+    link1: 10
+    link2: 22
+    link3: 35
+    link4: 30
+    link5: 13
+    link6: 15
+    link7: 11
+    link8: 23
+    gamma2: -1
+    gamma3: 1
+    target: 0.01
+
+leg:
+  link1: 15
+  link2: 10
+  link3: 10
+  link4: 10
+  link5: 10
+  gamma2: -1
+  gamma4: 1 
+  gamma5: 1
